@@ -22,7 +22,7 @@ With Minion Runner, users will be able to:
 
 This app will consist of a single screen with game board, game controls, and nav links to the Github, my LinkedIn, and the About modal.  Game controls will include Start, Stop, and Reset. 
 
-![wireframes](https://github.com/appacademy/ny-portfolio-curriculum/blob/master/javascript-project/js-proposal-wireframe.jpg)
+![wireframes](./MinionRunner.png)
 
 ### Architecture and Technologies
 
