@@ -65,12 +65,51 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Game = __webpack_require__(2);
+
+document.addEventListener('DOMContentLoaded', () => {
+  var canvas = document.getElementById('game-canvas');
+  var ctx = canvas.getContext('2d');
+  var playerImg = new Image(); 
+  playerImg.src = './assets/minion.png';
+  playerImg.onload = function() {
+    ctx.drawImage(playerImg, 50, 250, 50, 50); 
+  }
+  // debugger
+});
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports) {
 
 
-document.addEventListener('DOMContentLoaded', () => {
-  console.log("success");
-});
+class Minion {
+
+
+  draw(ctx) {
+    
+  }
+}
+
+module.exports = Minion; 
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Minion = __webpack_require__(1);
+
+class Game {
+
+  constructor(ctx) {
+    this.ctx = ctx; 
+    this.minion = new Minion({position: [100, 210] });
+  }
+}
+
+module.exports = Game;
 
 /***/ })
 /******/ ]);
