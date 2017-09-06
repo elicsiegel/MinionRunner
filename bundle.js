@@ -68,31 +68,20 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 const Game = __webpack_require__(2);
+// const GameView = require('./game_view.js');
 
 document.addEventListener('DOMContentLoaded', () => {
   var canvas = document.getElementById('game-canvas');
   var ctx = canvas.getContext('2d');
 
+  const easy_start_button = document.getElementById('easy-start'); 
+  
   const game = new Game(ctx, canvas);
-  // debugger
-  // game.draw(); 
-  
-  // var playerImg = new Image(); 
-  // playerImg.src = './assets/minion.png';
 
-  // playerImg.onload = function() {
-  //   ctx.drawImage(playerImg, 50, 250, 50, 50); 
-  // }
-  
-  // document.addEventListener('keydown', (e) => {
-  //   switch (e.keyCode) {
-  //     case 32: 
-  //       console.log("Jump");
-  //       game.minion.move(ctx);
-  //       // ctx.drawImage(playerImg, 100, 250, 50, 50)
-  //       break;
-  //   }
-  // });
+  easy_start_button.addEventListener('click', (e) => {
+    setTimeout(() => game.start('easy'), 200);
+  });
+
 });
 
 /***/ }),
@@ -107,25 +96,41 @@ class Minion {
     this.ctx = options.ctx; 
     this.image = new Image();
     this.image.src = './assets/minion.png';
+    this.inAir = false; 
+    this.jumpCount = 0;
 
-    this.image.onload = () => {
-      this.ctx.drawImage(this.image, this.position[0], this.position[1], 50, 50);
-    }
+    // this.image.onload = () => {
+    //   this.ctx.drawImage(this.image, this.position[0], this.position[1], 50, 50);
+    // }
   }
 
   move(ctx) {
     //this method will move minion's position, using jump(), then redraw minion using draw()
-    // debugger
-    this.jump();
-    this.draw(ctx); 
+    while (this.inAir = true) {
+      this.jump();
+      this.draw(ctx); 
+    }  
+  }
+
+  onGround() {
+    return this.position[0] === 100 && this.position[1] >= 250;
   }
 
   jump() {
-    this.position[0] += 100;  
+    if (this.inAir === true) {
+      this.position[1] -= 50;    
+      this.inAir = false; 
+    } else {
+      this.position[1] = 250;
+    }
   }
 
   draw(ctx) {
     ctx.clearRect(0, 0, 800, 300); 
+    
+    // this.image.onload = () => {
+    //   this.ctx.drawImage(this.image, this.position[0], this.position[1], 50, 50);
+    // }
     ctx.drawImage(this.image, this.position[0], this.position[1], 50, 50);
   }
 }
@@ -143,7 +148,9 @@ class Game {
   constructor(ctx, canvas) {
     this.ctx = ctx;
     this.canvas = canvas;  
-    this.minion = new Minion({ position: [50, 250], ctx: ctx });
+    this.minion = new Minion({ position: [10, 250], ctx: ctx });
+    this.gamePlaying = false;
+    this.gameOver = false; 
 
     this.setKeyboardListeners();
   }
@@ -160,11 +167,20 @@ class Game {
   }
 
   jump() {
+    this.minion.inAir = true; 
     this.minion.move(this.ctx);
   }
 
   draw() {
-    this.minion.draw(this.ctx); 
+    if (!this.gameOver) {
+      this.minion.draw(this.ctx);  
+    }
+  }
+
+  start(difficulty) {
+    this.gamePlaying = true;
+    this.difficulty = difficulty;  
+    this.draw();
   }
 }
 
