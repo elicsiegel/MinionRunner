@@ -1,0 +1,30 @@
+body {
+  font-family: 'Work Sans', sans-serif;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 15%;
+  margin-right: 15%;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+}
+
+.author-info img {
+  width: 24px;
+  height: 24px;
+}
+
+.game-area {
+  display: flex; 
+  justify-content: center;
+}
+
+#game-canvas {
+  border: 1px solid black;
+}
