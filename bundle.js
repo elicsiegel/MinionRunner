@@ -72,10 +72,6 @@ const Game = __webpack_require__(2);
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('game-canvas');
   const ctx = canvas.getContext('2d');
-
-  const easy_start_button = document.getElementById('easy-start'); 
-  const medium_start_button = document.getElementById('medium-start');
-  const hard_start_button = document.getElementById('hard-start');
   
   const game = new Game(ctx, canvas);
 
@@ -116,8 +112,8 @@ class Minion {
   }
 
   isCollidedWith(otherObject) {
-    if (this.position[0] < (otherObject.position[0] + otherObject.width/3) && 
-      (this.position[0] + this.width/3) > otherObject.position[0] &&
+    if (this.position[0] < (otherObject.position[0] + otherObject.width/2) && 
+      (this.position[0] + this.width/2) > otherObject.position[0] &&
       this.position[1] < (otherObject.position[1] + otherObject.height) &&
       (this.position[1] + this.height) > otherObject.position[1]
       ) {
@@ -233,12 +229,51 @@ class Game {
     this.menu = new Menu();
   }
 
+  setDifficulty() {
+    const defaultValues = {
+      skyscraperVelocity: 4,
+      airplaneVelocity: 4,
+      skyscraperImage: './assets/skyscraper.png',
+      skyscraperWidth: 125,
+    }
+
+    switch (this.difficulty) {
+      case "easy-start": 
+        return Object.assign({}, defaultValues);
+        break;
+      case "medium-start":
+        let mediumValues = {
+          skyscraperVelocity: 5,
+          airplaneVelocity: 5,
+          skyscraperImage: './assets/fat-skyscraper.png',
+          skyscraperWidth: 130,
+        }
+
+        return Object.assign({}, defaultValues, mediumValues);
+        break;
+      case "hard-start":
+        let hardValues = {
+          skyscraperVelocity: 8,
+          airplaneVelocity: 7,
+        }
+        return Object.assign({}, defaultValues, hardValues);
+        break;
+    }
+  }
+
   generatePieces() {
+    const defaultValues = {
+      skyscraperVelocity: 4,
+      airplaneVelocity: 2
+    }
+
+    let gameValues = this.setDifficulty();
+
     this.minion = new Minion({ position: [10, 250] });
 
-    this.obstacle = new Obstacle({position: [725, 200], resetPosition: 1000, velocity: 4, width: 125, height: 100, src: './assets/skyscraper.png' });
+    this.obstacle = new Obstacle({position: [725, 200], resetPosition: 1000, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, src: gameValues.skyscraperImage });
 
-    this.flyingObstacle = new Obstacle( { position: [2000, 100], resetPosition: 2000, velocity: 3, width: 50, height: 40, src: './assets/airplane.png'} ); 
+    this.flyingObstacle = new Obstacle( { position: [2000, 100], resetPosition: 2000, velocity: gameValues.airplaneVelocity, width: 50, height: 40, src: './assets/airplane.png'} ); 
   }
 
   start(difficulty) {
