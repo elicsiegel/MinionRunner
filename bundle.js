@@ -98,18 +98,16 @@ class Minion {
     this.image.src = './assets/minion.png';
     this.inAir = false; 
     this.jumpCount = 0;
-
+    this.velocity = 60; 
     // this.image.onload = () => {
     //   this.ctx.drawImage(this.image, this.position[0], this.position[1], 50, 50);
     // }
   }
 
   move(ctx) {
-    //this method will move minion's position, using jump(), then redraw minion using draw()
-    while (this.inAir = true) {
-      this.jump();
-      this.draw(ctx); 
-    }  
+    //this method will move minion's position, using jump(), then redraw minion using draw() 
+    this.jump();
+    this.draw(ctx);   
   }
 
   onGround() {
@@ -117,11 +115,15 @@ class Minion {
   }
 
   jump() {
-    if (this.inAir === true) {
-      this.position[1] -= 50;    
-      this.inAir = false; 
-    } else {
-      this.position[1] = 250;
+    if (this.jumping) {
+      if (this.velocity > -100) {
+        this.position[1] -= this.velocity;    
+        this.velocity -= 10;
+      } else {
+        this.position[1] = 250;
+        this.velocity = 60;
+        this.jumping = false; 
+      }
     }
   }
 
@@ -151,7 +153,7 @@ class Game {
     this.minion = new Minion({ position: [10, 250], ctx: ctx });
     this.gamePlaying = false;
     this.gameOver = false; 
-
+    this.draw = this.draw.bind(this);
     this.setKeyboardListeners();
   }
 
@@ -167,13 +169,13 @@ class Game {
   }
 
   jump() {
-    this.minion.inAir = true; 
-    this.minion.move(this.ctx);
+    this.minion.jumping = true; 
   }
 
   draw() {
     if (!this.gameOver) {
-      this.minion.draw(this.ctx);  
+      requestAnimationFrame(this.draw);
+      this.minion.move(this.ctx);  
     }
   }
 
