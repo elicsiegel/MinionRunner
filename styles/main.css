@@ -33,4 +33,21 @@ body {
 
 #game-canvas {
   border: 1px solid black;
+  background: url('../assets/background.png');
+  background-size: cover; 
+  animation: animatedBackground 700s linear infinite;
+}
+
+@keyframes animatedBackground {
+  from {
+    background-position: 0 0;
+  }
+/*use negative width if you want it to flow right to left else and positive for left to right*/
+  to {
+    background-position: -10000px 0;
+  }
+}
+.menu {
+  display: flex;
+  justify-content: center;
 }

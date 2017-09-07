@@ -68,11 +68,10 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 const Game = __webpack_require__(2);
-// const GameView = require('./game_view.js');
 
 document.addEventListener('DOMContentLoaded', () => {
-  var canvas = document.getElementById('game-canvas');
-  var ctx = canvas.getContext('2d');
+  const canvas = document.getElementById('game-canvas');
+  const ctx = canvas.getContext('2d');
 
   const easy_start_button = document.getElementById('easy-start'); 
   
@@ -92,26 +91,21 @@ document.addEventListener('DOMContentLoaded', () => {
 class Minion {
 
   constructor(options) {
-    this.position = options.position; 
-    this.ctx = options.ctx; 
+    this.position = options.position;  
     this.image = new Image();
-    this.image.src = './assets/minion.png';
-    this.inAir = false; 
-    this.jumpCount = 0;
-    this.velocity = 60; 
-    // this.image.onload = () => {
-    //   this.ctx.drawImage(this.image, this.position[0], this.position[1], 50, 50);
-    // }
+    this.image.src = './assets/minion.png'; 
+    this.velocity = 65; 
+    
   }
 
-  move(ctx) {
+  render(ctx) {
     //this method will move minion's position, using jump(), then redraw minion using draw() 
     this.jump();
     this.draw(ctx);   
   }
 
   onGround() {
-    return this.position[0] === 100 && this.position[1] >= 250;
+    return this.position[0] === 10 && this.position[1] >= 250;
   }
 
   jump() {
@@ -121,7 +115,7 @@ class Minion {
         this.velocity -= 10;
       } else {
         this.position[1] = 250;
-        this.velocity = 60;
+        this.velocity = 65;
         this.jumping = false; 
       }
     }
@@ -129,10 +123,6 @@ class Minion {
 
   draw(ctx) {
     ctx.clearRect(0, 0, 800, 300); 
-    
-    // this.image.onload = () => {
-    //   this.ctx.drawImage(this.image, this.position[0], this.position[1], 50, 50);
-    // }
     ctx.drawImage(this.image, this.position[0], this.position[1], 50, 50);
   }
 }
@@ -143,15 +133,15 @@ module.exports = Minion;
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Minion = __webpack_require__(1);
+const Minion = __webpack_require__(1); 
 
 class Game {
 
   constructor(ctx, canvas) {
     this.ctx = ctx;
     this.canvas = canvas;  
-    this.minion = new Minion({ position: [10, 250], ctx: ctx });
-    this.gamePlaying = false;
+    this.minion = new Minion({ position: [10, 250] });
+    // this.background = new Background(ctx);
     this.gameOver = false; 
     this.draw = this.draw.bind(this);
     this.setKeyboardListeners();
@@ -162,25 +152,25 @@ class Game {
       switch (e.keyCode) {
         case 32: 
           console.log("Jump");
-          this.jump(); 
+          this.activateJump(); 
           break;
       }
     });
   }
 
-  jump() {
+  activateJump() {
     this.minion.jumping = true; 
   }
 
   draw() {
     if (!this.gameOver) {
       requestAnimationFrame(this.draw);
-      this.minion.move(this.ctx);  
+      this.minion.render(this.ctx); 
     }
   }
 
   start(difficulty) {
-    this.gamePlaying = true;
+    this.canvas.focus();
     this.difficulty = difficulty;  
     this.draw();
   }
