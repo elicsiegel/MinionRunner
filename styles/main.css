@@ -50,4 +50,19 @@ body {
 .menu {
   display: flex;
   justify-content: center;
+  align-items: center;
+  
+}
+
+.menu-buttons {
+  border: 1px solid black;
+  height: 300px;
+  width: 800px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hide {
+  display: none; 
 }

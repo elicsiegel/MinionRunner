@@ -78,6 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const game = new Game(ctx, canvas);
 
   easy_start_button.addEventListener('click', (e) => {
+    const gameArea = document.querySelector(".game-area");
+    const menu = document.querySelector(".menu");
+
+    gameArea.classList.remove('hide'); 
+    menu.classList.add('hide');
+    
     setTimeout(() => game.start('easy'), 200);
   });
 
@@ -141,7 +147,7 @@ class Game {
     this.ctx = ctx;
     this.canvas = canvas;  
     this.minion = new Minion({ position: [10, 250] });
-    // this.background = new Background(ctx);
+    
     this.gameOver = false; 
     this.draw = this.draw.bind(this);
     this.setKeyboardListeners();
