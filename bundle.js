@@ -74,17 +74,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const ctx = canvas.getContext('2d');
 
   const easy_start_button = document.getElementById('easy-start'); 
+  const medium_start_button = document.getElementById('medium-start');
+  const hard_start_button = document.getElementById('hard-start');
   
   const game = new Game(ctx, canvas);
 
-  easy_start_button.addEventListener('click', (e) => {
+  const menu_start_buttons = document.querySelector('.menu-buttons');
+
+  menu_start_buttons.addEventListener('click', (e) => {
     const gameArea = document.querySelector(".game-area");
     const menu = document.querySelector(".menu");
 
     gameArea.classList.remove('hide'); 
     menu.classList.add('hide');
-    
-    setTimeout(() => game.start('easy'), 200);
+    setTimeout(() => game.start(e.target.id), 200);
   });
 
 });
@@ -151,7 +154,8 @@ module.exports = Minion;
 /***/ (function(module, exports, __webpack_require__) {
 
 const Minion = __webpack_require__(1); 
-const Obstacle = __webpack_require__(5); 
+const Obstacle = __webpack_require__(5);
+const Menu = __webpack_require__(6); 
 
 class Game {
 
@@ -204,8 +208,9 @@ class Game {
 
   draw() {
     if (!this.gameOver && !this.paused) {
-      requestAnimationFrame(this.draw);
       this.ctx.clearRect(0, 0, 800, 300);
+      requestAnimationFrame(this.draw);
+      this.menu.render(this.ctx)
       this.minion.render(this.ctx); 
       this.obstacle.render(this.ctx);
       this.flyingObstacle.render(this.ctx);
@@ -218,11 +223,17 @@ class Game {
       if (this.minion.isCollidedWith(this.flyingObstacle)) {
         this.gameOver = true; 
       }
-
+    }
+    if (this.gameOver) {
+      this.menu.drawGameOverText(this.ctx);
     }
   }
 
-  generatePieces(difficulty) {
+  generateMenu() {
+    this.menu = new Menu();
+  }
+
+  generatePieces() {
     this.minion = new Minion({ position: [10, 250] });
 
     this.obstacle = new Obstacle({position: [725, 200], resetPosition: 1000, velocity: 4, width: 125, height: 100, src: './assets/skyscraper.png' });
@@ -231,11 +242,13 @@ class Game {
   }
 
   start(difficulty) {
+    console.log(difficulty);
     this.canvas.focus();
     this.difficulty = difficulty; 
     this.paused = false; 
     this.gameOver = false; 
-    this.generatePieces(difficulty); 
+    this.generateMenu(); 
+    this.generatePieces();
     this.draw();
   }
 }
@@ -281,6 +294,38 @@ class Obstacle {
 }
 
 module.exports = Obstacle; 
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+class Menu {
+
+  constructor() {
+    this.position = [600, 50];
+    this.width = 300;
+    this.height = 300;
+    this.score = 9;
+  }
+
+  render(ctx) {
+    this.draw(ctx);
+  }
+
+  draw(ctx) {
+    this.score += 1;
+    ctx.font = '20px Work Sans';
+    ctx.fillText(`Score: ${this.score}`, 650, 40);
+  }
+
+  drawGameOverText(ctx) {
+    ctx.font = '20px Work Sans';
+    ctx.fillText(`Final Score: ${this.score} Press r to restart game`, 200, 40);
+  }
+
+}
+
+module.exports = Menu;
 
 /***/ })
 /******/ ]);
