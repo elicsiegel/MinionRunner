@@ -100,8 +100,10 @@ class Minion {
     this.position = options.position;  
     this.image = new Image();
     this.image.src = './assets/minion.png'; 
-    this.velocity = 65; 
-    
+    this.width = 50;
+    this.height = 50; 
+    this.velocity = 10; 
+  
   }
 
   render(ctx) {
@@ -110,26 +112,33 @@ class Minion {
     this.draw(ctx);   
   }
 
-  onGround() {
-    return this.position[0] === 10 && this.position[1] >= 250;
+  isCollidedWith(otherObject) {
+    if (this.position[0] < (otherObject.position[0] + otherObject.width) && 
+      (this.position[0] + this.width) > otherObject.position[0] &&
+      this.position[1] < (otherObject.position[1] + otherObject.height) &&
+      (this.position[1] + this.height) > otherObject.position[1]
+      ) {
+      console.log("collision"); 
+    }
   }
 
   jump() {
+
     if (this.jumping) {
-      if (this.velocity > -100) {
-        this.position[1] -= this.velocity;    
-        this.velocity -= 10;
+      if (this.velocity > -10) {
+        this.position[1] -= this.velocity;     
+        this.velocity -= .3;
       } else {
         this.position[1] = 250;
-        this.velocity = 65;
-        this.jumping = false; 
+        this.velocity = 10;
+        this.jumping = false;  
       }
     }
   }
 
   draw(ctx) {
-    ctx.clearRect(0, 0, 800, 300); 
-    ctx.drawImage(this.image, this.position[0], this.position[1], 50, 50);
+     
+    ctx.drawImage(this.image, this.position[0], this.position[1], this.width, this.height);
   }
 }
 
@@ -140,6 +149,7 @@ module.exports = Minion;
 /***/ (function(module, exports, __webpack_require__) {
 
 const Minion = __webpack_require__(1); 
+const Obstacle = __webpack_require__(5); 
 
 class Game {
 
@@ -147,7 +157,8 @@ class Game {
     this.ctx = ctx;
     this.canvas = canvas;  
     this.minion = new Minion({ position: [10, 250] });
-    
+    this.obstacle = new Obstacle({position: [725, 250], velocity: 3, width: 125, height: 80 });
+
     this.gameOver = false; 
     this.draw = this.draw.bind(this);
     this.setKeyboardListeners();
@@ -171,7 +182,10 @@ class Game {
   draw() {
     if (!this.gameOver) {
       requestAnimationFrame(this.draw);
+      this.ctx.clearRect(0, 0, 800, 300);
       this.minion.render(this.ctx); 
+      this.obstacle.render(this.ctx);
+      this.minion.isCollidedWith(this.obstacle);
     }
   }
 
@@ -183,6 +197,45 @@ class Game {
 }
 
 module.exports = Game;
+
+/***/ }),
+/* 3 */,
+/* 4 */,
+/* 5 */
+/***/ (function(module, exports) {
+
+class Obstacle {
+
+  constructor(options) {
+    this.position = options.position;  
+    this.image = new Image();
+    this.image.src = './assets/skyscraper.png'; 
+    this.velocity = options.velocity;
+    this.width = options.width;
+    this.height = options.height;  
+  }
+
+  render(ctx) {
+
+    this.move();
+    this.draw(ctx);
+  }
+
+  move() {
+    if (this.position[0] <= -45) {
+      this.position[0] = 725;
+    } else {
+      this.position[0] -= this.velocity;  
+    }
+  }
+
+  draw(ctx) {
+    //last two numbers of draw image are position, last two of draw image are size 
+    ctx.drawImage(this.image, this.position[0], this.position[1], this.width, this.height);
+  }
+}
+
+module.exports = Obstacle; 
 
 /***/ })
 /******/ ]);
