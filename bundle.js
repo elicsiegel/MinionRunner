@@ -190,9 +190,13 @@ class Game {
   }
 
   togglePause() {
+    // const canvas = document.getElementById('game-canvas');
+
     if (this.paused === false) {
+      this.canvas.classList.add('paused'); 
       this.paused = true;
     } else {
+      this.canvas.classList.remove('paused'); 
       this.paused = false;
       this.draw();
     } 
