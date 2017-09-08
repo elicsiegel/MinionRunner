@@ -164,6 +164,7 @@ class Game {
     this.draw = this.draw.bind(this);
     this.setKeyboardListeners();
     this.jumpSound = new Audio('./assets/audio/jump1.m4a');
+    this.gameOverSound = new Audio('./assets/audio/game_over.mp3');
   }
 
   setKeyboardListeners() {
@@ -236,6 +237,7 @@ class Game {
     }
     if (this.gameOver) {
       this.canvas.classList.add('paused');
+      this.gameOverSound.play();
       this.menu.drawGameOverText(this.ctx);
     }
   }
