@@ -102,7 +102,7 @@ class Minion {
     this.width = 50;
     this.height = 50; 
     this.velocity = 10; 
-    
+
   
   }
 
@@ -216,26 +216,42 @@ class Game {
       this.menu.render(this.ctx)
       this.minion.render(this.ctx); 
       this.obstacle.render(this.ctx);
+      this.obstacle2.render(this.ctx);
+
+      if (this.minion.isCollidedWith(this.obstacle2)) {
+        this.gameOver = true; 
+        this.finalFrame = true;
+      }
 
       if (this.difficulty === "medium-start" || this.difficulty === "hard-start")  {
-        this.obstacle2.render(this.ctx);
         this.flyingObstacle.render(this.ctx);
 
         if (this.minion.isCollidedWith(this.flyingObstacle)) {
           this.gameOver = true; 
-        }
-        if (this.minion.isCollidedWith(this.obstacle2)) {
-          this.gameOver = true; 
+          this.finalFrame = true;
         }
       }
 
       if (this.minion.isCollidedWith(this.obstacle)) {
         this.gameOver = true; 
+        this.finalFrame = true;
         console.log("OVER");
       }
       
     }
+    if (this.finalFrame) {
+      this.ctx.clearRect(0, 0, 800, 300);
+      requestAnimationFrame(this.draw);
+      this.menu.render(this.ctx);
+      this.minion.image.src = './assets/surprised_minion.png'; 
+      
+      setTimeout(() => this.minion.render(this.ctx), 50);
+      this.obstacle.render(this.ctx);
+      this.obstacle2.render(this.ctx);
+    }
+
     if (this.gameOver) {
+      this.finalFrame = false;
       this.canvas.classList.add('paused');
       this.gameOverSound.play();
       this.menu.drawGameOverText(this.ctx);
@@ -252,6 +268,7 @@ class Game {
       airplaneVelocity: 4,
       skyscraperImage: './assets/skyscraper.png',
       skyscraperWidth: 80,
+      skyscraper2Image: './assets/fat-tall-sky.png',
     }
 
     switch (this.difficulty) {
@@ -288,9 +305,9 @@ class Game {
     this.minion = new Minion({ position: [10, 250] });
 
     this.obstacle = new Obstacle({position: [725, 200], resetPosition: 1000, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, src: gameValues.skyscraperImage });
+    this.obstacle2 = new Obstacle({position: [1200, 200], resetPosition: 1000, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, src: gameValues.skyscraper2Image });
 
     if (this.difficulty === "medium-start" || this.difficulty === "hard-start") {
-      this.obstacle2 = new Obstacle({position: [1200, 200], resetPosition: 1000, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, src: gameValues.skyscraperImage });
 
       this.flyingObstacle = new Obstacle( { position: [2000, 60], resetPosition: 2000, velocity: gameValues.airplaneVelocity, width: 50, height: 40, src: './assets/airplane.png'} );  
     }
@@ -362,7 +379,7 @@ class Menu {
     this.width = 300;
     this.height = 300;
     this.score = 0;
-    this.highScore = 0; 
+    this.highScore = null; 
   }
 
   render(ctx) {
@@ -376,6 +393,10 @@ class Menu {
   }
 
   drawGameOverText(ctx) {
+    if (this.highScore === null) {
+      this.highScore = this.score; 
+    }
+    
     if (this.score > this.highScore) {
       this.highScore = this.score; 
       ctx.fillText(`New High Score!: ${this.score}`, 200, 30);
