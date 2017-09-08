@@ -163,6 +163,8 @@ class Game {
     this.gameOver = false; 
     this.draw = this.draw.bind(this);
     this.setKeyboardListeners();
+    this.setEventListeners();
+    this.muted = false; 
     this.jumpSound = new Audio('./assets/audio/jump1.m4a');
     this.gameOverSound = new Audio('./assets/audio/game_over.mp3');
   }
@@ -187,6 +189,19 @@ class Game {
     });
   }
 
+  setEventListeners() {
+    this.canvas.addEventListener('click', (e) => this.mute(e));
+  }
+
+  mute(e) {
+    if (this.muted === false) {
+      this.muted = true;
+    } else {
+      this.muted = false; 
+    }
+    console.log(this.muted);
+  }
+
   resetGame() {
     console.log(this.menu.highScore);
     this.start(this.difficulty);
@@ -205,7 +220,10 @@ class Game {
   }
 
   activateJump() {
-    this.jumpSound.play();
+    if (!this.muted) {
+      this.jumpSound.play();
+    }
+
     this.minion.jumping = true; 
   }
 
@@ -244,7 +262,7 @@ class Game {
       requestAnimationFrame(this.draw);
       this.menu.render(this.ctx);
       this.minion.image.src = './assets/surprised_minion.png'; 
-      
+
       setTimeout(() => this.minion.render(this.ctx), 50);
       this.obstacle.render(this.ctx);
       this.obstacle2.render(this.ctx);
@@ -253,13 +271,16 @@ class Game {
     if (this.gameOver) {
       this.finalFrame = false;
       this.canvas.classList.add('paused');
-      this.gameOverSound.play();
+
+      if (!this.muted) {
+        this.gameOverSound.play();
+      }
       this.menu.drawGameOverText(this.ctx);
     }
   }
 
   generateMenu() {
-    this.menu = new Menu();
+    this.menu = new Menu(this);
   }
 
   setDifficulty() {
@@ -320,7 +341,7 @@ class Game {
     this.difficulty = difficulty; 
     this.paused = false; 
     this.gameOver = false; 
-    this.generateMenu(); 
+    this.generateMenu(this); 
     this.generatePieces();
     this.draw();
   }
@@ -374,13 +395,15 @@ module.exports = Obstacle;
 
 class Menu {
 
-  constructor() {
+  constructor(game) {
+    this.game = game; 
     this.position = [600, 50];
     this.width = 300;
     this.height = 300;
     this.score = 0;
     this.highScore = null; 
   }
+
 
   render(ctx) {
     this.draw(ctx);
@@ -390,16 +413,24 @@ class Menu {
     this.score += 1;
     ctx.font = '20px Work Sans';
     ctx.fillText(`Score: ${this.score}`, 650, 40);
+    
+    if (this.game.muted) {
+      ctx.font = '15px Work Sans';
+      ctx.fillText('Muted (click screen to toggle mute)', 10, 20);
+    } else {
+      ctx.font = '15px Work Sans';
+      ctx.fillText('Umuted (click screen to toggle mute)', 10, 20);
+    }
   }
 
   drawGameOverText(ctx) {
     if (this.highScore === null) {
       this.highScore = this.score; 
     }
-    
+
     if (this.score > this.highScore) {
       this.highScore = this.score; 
-      ctx.fillText(`New High Score!: ${this.score}`, 200, 30);
+      ctx.fillText(`New High Score!: ${this.score}`, 200, 40);
     }
 
     ctx.font = '20px Work Sans';
