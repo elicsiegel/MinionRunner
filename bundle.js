@@ -170,7 +170,6 @@ class Game {
     document.addEventListener('keydown', (e) => {
       switch (e.keyCode) {
         case 32: 
-          // console.log("Jump");
           this.activateJump(); 
           break;
         case 82:
@@ -194,8 +193,6 @@ class Game {
   }
 
   togglePause() {
-    // const canvas = document.getElementById('game-canvas');
-
     if (this.paused === false) {
       this.canvas.classList.add('paused'); 
       this.paused = true;
@@ -238,6 +235,7 @@ class Game {
       
     }
     if (this.gameOver) {
+      this.canvas.classList.add('paused');
       this.menu.drawGameOverText(this.ctx);
     }
   }
@@ -262,7 +260,7 @@ class Game {
       case "medium-start":
         let mediumValues = {
           skyscraperVelocity: 4,
-          airplaneVelocity: 3,
+          airplaneVelocity: 8,
         }
 
         return Object.assign({}, defaultValues, mediumValues);
@@ -297,6 +295,7 @@ class Game {
   }
 
   start(difficulty) {
+    this.canvas.classList.remove('paused');
     console.log(difficulty);
     this.canvas.focus();
     this.difficulty = difficulty; 
