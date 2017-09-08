@@ -102,6 +102,7 @@ class Minion {
     this.width = 50;
     this.height = 50; 
     this.velocity = 10; 
+    
   
   }
 
@@ -112,8 +113,8 @@ class Minion {
   }
 
   isCollidedWith(otherObject) {
-    if (this.position[0] < (otherObject.position[0] + otherObject.width/2) && 
-      (this.position[0] + this.width/2) > otherObject.position[0] &&
+    if (this.position[0] < (otherObject.position[0] + otherObject.width) && 
+      (this.position[0] + this.width) > otherObject.position[0] &&
       this.position[1] < (otherObject.position[1] + otherObject.height) &&
       (this.position[1] + this.height) > otherObject.position[1]
       ) {
@@ -162,13 +163,14 @@ class Game {
     this.gameOver = false; 
     this.draw = this.draw.bind(this);
     this.setKeyboardListeners();
+    this.jumpSound = new Audio('./assets/audio/jump1.m4a');
   }
 
   setKeyboardListeners() {
     document.addEventListener('keydown', (e) => {
       switch (e.keyCode) {
         case 32: 
-          console.log("Jump");
+          // console.log("Jump");
           this.activateJump(); 
           break;
         case 82:
@@ -186,7 +188,9 @@ class Game {
   }
 
   resetGame() {
+    console.log(this.menu.highScore);
     this.start(this.difficulty);
+
   }
 
   togglePause() {
@@ -203,6 +207,7 @@ class Game {
   }
 
   activateJump() {
+    this.jumpSound.play();
     this.minion.jumping = true; 
   }
 
@@ -213,16 +218,24 @@ class Game {
       this.menu.render(this.ctx)
       this.minion.render(this.ctx); 
       this.obstacle.render(this.ctx);
-      this.flyingObstacle.render(this.ctx);
+
+      if (this.difficulty === "medium-start" || this.difficulty === "hard-start")  {
+        this.obstacle2.render(this.ctx);
+        this.flyingObstacle.render(this.ctx);
+
+        if (this.minion.isCollidedWith(this.flyingObstacle)) {
+          this.gameOver = true; 
+        }
+        if (this.minion.isCollidedWith(this.obstacle2)) {
+          this.gameOver = true; 
+        }
+      }
 
       if (this.minion.isCollidedWith(this.obstacle)) {
         this.gameOver = true; 
         console.log("OVER");
       }
       
-      if (this.minion.isCollidedWith(this.flyingObstacle)) {
-        this.gameOver = true; 
-      }
     }
     if (this.gameOver) {
       this.menu.drawGameOverText(this.ctx);
@@ -238,27 +251,26 @@ class Game {
       skyscraperVelocity: 4,
       airplaneVelocity: 4,
       skyscraperImage: './assets/skyscraper.png',
-      skyscraperWidth: 125,
+      skyscraperWidth: 80,
     }
 
     switch (this.difficulty) {
       case "easy-start": 
         return Object.assign({}, defaultValues);
         break;
+
       case "medium-start":
         let mediumValues = {
-          skyscraperVelocity: 5,
-          airplaneVelocity: 5,
-          skyscraperImage: './assets/fat-skyscraper.png',
-          skyscraperWidth: 130,
+          skyscraperVelocity: 4,
+          airplaneVelocity: 3,
         }
 
         return Object.assign({}, defaultValues, mediumValues);
         break;
       case "hard-start":
         let hardValues = {
-          skyscraperVelocity: 8,
-          airplaneVelocity: 7,
+          skyscraperVelocity: 5,
+          airplaneVelocity: 10,
         }
         return Object.assign({}, defaultValues, hardValues);
         break;
@@ -277,7 +289,11 @@ class Game {
 
     this.obstacle = new Obstacle({position: [725, 200], resetPosition: 1000, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, src: gameValues.skyscraperImage });
 
-    this.flyingObstacle = new Obstacle( { position: [2000, 100], resetPosition: 2000, velocity: gameValues.airplaneVelocity, width: 50, height: 40, src: './assets/airplane.png'} ); 
+    if (this.difficulty === "medium-start" || this.difficulty === "hard-start") {
+      this.obstacle2 = new Obstacle({position: [1200, 200], resetPosition: 1000, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, src: gameValues.skyscraperImage });
+
+      this.flyingObstacle = new Obstacle( { position: [2000, 60], resetPosition: 2000, velocity: gameValues.airplaneVelocity, width: 50, height: 40, src: './assets/airplane.png'} );  
+    }
   }
 
   start(difficulty) {
@@ -344,7 +360,8 @@ class Menu {
     this.position = [600, 50];
     this.width = 300;
     this.height = 300;
-    this.score = 9;
+    this.score = 0;
+    this.highScore = 0; 
   }
 
   render(ctx) {
@@ -358,7 +375,13 @@ class Menu {
   }
 
   drawGameOverText(ctx) {
+    if (this.score > this.highScore) {
+      this.highScore = this.score; 
+      ctx.fillText(`New High Score!: ${this.score}`, 200, 30);
+    }
+
     ctx.font = '20px Work Sans';
+
     ctx.fillText(`Final Score: ${this.score} Press r to restart game`, 200, 40);
   }
 
