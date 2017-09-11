@@ -319,9 +319,9 @@ class Minion {
       this.imageCount += 1;
 
       if (this.imageCount < 10) {
-        setTimeout( () => this.image.src = './assets/minion.png', 1);
+        setTimeout( () => this.image.src = './assets/minion.png', 10);
       } else {
-        setTimeout(() => this.image.src = './assets/minion2.png', 1);
+        setTimeout(() => this.image.src = './assets/minion2.png', 10);
       }
 
       if (this.imageCount === 20) {
