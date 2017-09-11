@@ -205,7 +205,7 @@ class Game {
       this.menu.render(this.ctx);
       this.minion.image.src = './assets/surprised_minion.png'; 
 
-      setTimeout(() => this.minion.render(this.ctx), 50);
+      setTimeout(() => this.minion.render(this.ctx), 10);
       this.obstacle.render(this.ctx);
       this.obstacle2.render(this.ctx);
     }
@@ -318,13 +318,13 @@ class Minion {
     } else {
       this.imageCount += 1;
 
-      if (this.imageCount < 20) {
-        setTimeout( () => this.image.src = './assets/minion.png', 10);
+      if (this.imageCount < 10) {
+        setTimeout( () => this.image.src = './assets/minion.png', 1);
       } else {
-        setTimeout(() => this.image.src = './assets/minion2.png', 10);
+        setTimeout(() => this.image.src = './assets/minion2.png', 1);
       }
 
-      if (this.imageCount === 45) {
+      if (this.imageCount === 20) {
         this.imageCount = 0;
       }
     }
