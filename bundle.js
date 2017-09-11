@@ -67,7 +67,7 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Game = __webpack_require__(2);
+const Game = __webpack_require__(1);
 
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('game-canvas');
@@ -90,69 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
-
-
-class Minion {
-
-  constructor(options) {
-    this.position = options.position;  
-    this.image = new Image();
-    this.image.src = './assets/minion.png'; 
-    this.width = 50;
-    this.height = 50; 
-    this.velocity = 10; 
-
-  
-  }
-
-  render(ctx) {
-    //this method will move minion's position, using jump(), then redraw minion using draw() 
-    this.jump();
-    this.draw(ctx);   
-  }
-
-  isCollidedWith(otherObject) {
-    if (this.position[0] < (otherObject.position[0] + otherObject.width) && 
-      (this.position[0] + this.width) > otherObject.position[0] &&
-      this.position[1] < (otherObject.position[1] + otherObject.height) &&
-      (this.position[1] + this.height) > otherObject.position[1]
-      ) {
-      console.log("collision"); 
-      return true;
-    } else {
-      return false; 
-    }
-  }
-
-  jump() {
-
-    if (this.jumping) {
-      if (this.velocity > -10) {
-        this.position[1] -= this.velocity;     
-        this.velocity -= .3;
-      } else {
-        this.position[1] = 250;
-        this.velocity = 10;
-        this.jumping = false;  
-      }
-    }
-  }
-
-  draw(ctx) { 
-    ctx.drawImage(this.image, this.position[0], this.position[1], this.width, this.height);
-  }
-}
-
-module.exports = Minion; 
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Minion = __webpack_require__(1); 
-const Obstacle = __webpack_require__(5);
-const Menu = __webpack_require__(6); 
+const Minion = __webpack_require__(2); 
+const Obstacle = __webpack_require__(3);
+const Menu = __webpack_require__(4); 
 
 class Game {
 
@@ -350,9 +292,83 @@ class Game {
 module.exports = Game;
 
 /***/ }),
-/* 3 */,
-/* 4 */,
-/* 5 */
+/* 2 */
+/***/ (function(module, exports) {
+
+
+class Minion {
+
+  constructor(options) {
+    this.position = options.position;  
+    this.image = new Image();
+    this.image.src = './assets/minion.png'; 
+    this.width = 50;
+    this.height = 50; 
+    this.velocity = 10; 
+    this.imageCount = 0;
+  
+  }
+
+  render(ctx) {
+    //this method will move minion's position, using jump(), then redraw minion using draw()
+    
+    if (this.jumping) {
+      this.image.src = './assets/minion.png';
+      // this.imageCount = 0;
+    } else {
+      this.imageCount += 1;
+
+      if (this.imageCount < 20) {
+        setTimeout( () => this.image.src = './assets/minion.png', 10);
+      } else {
+        setTimeout(() => this.image.src = './assets/minion2.png', 10);
+      }
+
+      if (this.imageCount === 45) {
+        this.imageCount = 0;
+      }
+    }
+
+    this.jump();
+    this.draw(ctx);   
+  }
+
+  isCollidedWith(otherObject) {
+    if (this.position[0] < (otherObject.position[0] + otherObject.width) && 
+      (this.position[0] + this.width) > otherObject.position[0] &&
+      this.position[1] < (otherObject.position[1] + otherObject.height) &&
+      (this.position[1] + this.height) > otherObject.position[1]
+      ) {
+      console.log("collision"); 
+      return true;
+    } else {
+      return false; 
+    }
+  }
+
+  jump() {
+
+    if (this.jumping) {
+      if (this.velocity > -10) {
+        this.position[1] -= this.velocity;     
+        this.velocity -= .3;
+      } else {
+        this.position[1] = 250;
+        this.velocity = 10;
+        this.jumping = false;  
+      }
+    }
+  }
+
+  draw(ctx) { 
+    ctx.drawImage(this.image, this.position[0], this.position[1], this.width, this.height);
+  }
+}
+
+module.exports = Minion; 
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports) {
 
 class Obstacle {
@@ -390,7 +406,7 @@ class Obstacle {
 module.exports = Obstacle; 
 
 /***/ }),
-/* 6 */
+/* 4 */
 /***/ (function(module, exports) {
 
 class Menu {
