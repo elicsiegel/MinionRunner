@@ -167,6 +167,7 @@ class Game {
     }
 
     this.minion.jumping = true; 
+    this.minion.imageCount = 0;
   }
 
   draw() {
@@ -312,22 +313,25 @@ class Minion {
   render(ctx) {
     //this method will move minion's position, using jump(), then redraw minion using draw()
     
-    // if (this.jumping) {
-    //   this.image.src = './assets/minion.png';
-    //   // this.imageCount = 0;
-    // } else {
-    //   this.imageCount += 1;
+    if (this.jumping) {
+      
+      if (this.imageCount === 0) {
+        this.imageCount += 1;
+        setTimeout( () => this.image.src = './assets/minion.png', 10);
+      }
+    } else {
+      this.imageCount += 1;
+      console.log(this.imageCount);
+      if (this.imageCount === 1) {
+        setTimeout( () => this.image.src = './assets/minion.png', 10);
+      } else if (this.imageCount === 18) {
+        setTimeout(() => this.image.src = './assets/minion2.png', 10);
+      }
 
-    //   if (this.imageCount < 10) {
-    //     setTimeout( () => this.image.src = './assets/minion.png', 10);
-    //   } else {
-    //     setTimeout(() => this.image.src = './assets/minion2.png', 10);
-    //   }
-
-    //   if (this.imageCount === 20) {
-    //     this.imageCount = 0;
-    //   }
-    // }
+      if (this.imageCount === 35) {
+        this.imageCount = 0;
+      }
+    }
 
     this.jump();
     this.draw(ctx);   
