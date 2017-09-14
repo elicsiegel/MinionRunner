@@ -500,7 +500,10 @@ class Menu {
     ctx.fillText(`Score: ${this.score}`, 650, 40);
     ctx.font = '15px Work Sans';
     ctx.fillText(`Current High Score: ${this.game.prevHighScore}`, 600, 20);
-    ctx.fillText(`Global High Score: ${this.game.globalHighScore}`, 350, 20);
+
+    if (this.game.globalHighScore !== undefined) {
+      ctx.fillText(`Global High Score: ${this.game.globalHighScore}`, 350, 20);
+    }
     if (this.game.muted) {
       ctx.font = '15px Work Sans';
       ctx.fillText('Muted (click screen to toggle mute)', 10, 20);
