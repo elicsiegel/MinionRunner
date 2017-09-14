@@ -209,7 +209,7 @@ class Game {
       this.menu.render(this.ctx);
       this.minion.image.src = './assets/surprised_minion.png'; 
 
-      setTimeout(() => this.minion.render(this.ctx), 10);
+      setTimeout(() => this.minion.render(this.ctx), 20);
       this.obstacle.render(this.ctx);
       this.obstacle2.render(this.ctx);
     }
@@ -310,7 +310,7 @@ class Minion {
     this.height = 50; 
     this.velocity = 10; 
     this.tickCount = 0;
-    this.ticksPerFrame = 15;
+    this.ticksPerFrame = 5;
     this.frameIndex = 0;
   }
 
@@ -323,10 +323,10 @@ class Minion {
 
         if (this.frameIndex === 0) {
           this.frameIndex = 1;
-          setTimeout(() => this.image.src = "./assets/minion.png", 10);
+          setTimeout(() => this.image.src = "./assets/minion.png", 5);
         } else {
           this.frameIndex = 0;
-          setTimeout(() => this.image.src = "./assets/minion2.png", 10);
+          setTimeout(() => this.image.src = "./assets/minion2.png", 5);
         }
       }
       
