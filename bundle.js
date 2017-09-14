@@ -109,6 +109,7 @@ class Game {
     this.muted = false; 
     this.jumpSound = new Audio('./assets/audio/jump1.m4a');
     this.gameOverSound = new Audio('./assets/audio/game_over.mp3');
+    this.prevHighScore = 0;
   }
 
   setKeyboardListeners() {
@@ -145,9 +146,10 @@ class Game {
   }
 
   resetGame() {
-    console.log(this.menu.highScore);
+    if (this.menu.highScore > this.prevHighScore) {
+      this.prevHighScore = this.menu.highScore; 
+    }
     this.start(this.difficulty);
-
   }
 
   togglePause() {
@@ -280,7 +282,7 @@ class Game {
 
   start(difficulty) {
     this.canvas.classList.remove('paused');
-    console.log(difficulty);
+    console.log(this.prevHighScore);
     this.canvas.focus();
     this.difficulty = difficulty; 
     this.paused = false; 
@@ -308,7 +310,7 @@ class Minion {
     this.height = 50; 
     this.velocity = 10; 
     this.tickCount = 0;
-    this.ticksPerFrame = 10;
+    this.ticksPerFrame = 15;
     this.frameIndex = 0;
   }
 
@@ -434,7 +436,8 @@ class Menu {
     this.score += 1;
     ctx.font = '20px Work Sans';
     ctx.fillText(`Score: ${this.score}`, 650, 40);
-    
+    ctx.font = '15px Work Sans';
+    ctx.fillText(`Current High Score: ${this.game.prevHighScore}`, 600, 20);
     if (this.game.muted) {
       ctx.font = '15px Work Sans';
       ctx.fillText('Muted (click screen to toggle mute)', 10, 20);
