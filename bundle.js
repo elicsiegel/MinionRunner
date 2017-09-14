@@ -63,8 +63,9 @@
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ (function(module, exports, __webpack_require__) {
 
 const Game = __webpack_require__(1);
@@ -73,9 +74,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('game-canvas');
   const ctx = canvas.getContext('2d');
   
-  const game = new Game(ctx, canvas);
+  var config = {
+        apiKey: "AIzaSyBkc22wgBkJD-I-jOz20CbzBDLNm25mqnw",
+        authDomain: "minionrunner-c5d40.firebaseapp.com",
+        databaseURL: "https://minionrunner-c5d40.firebaseio.com",
+        projectId: "minionrunner-c5d40",
+        storageBucket: "",
+        messagingSenderId: "522343975744"
+      };
+
+  firebase.initializeApp(config);
+  const database = firebase.database();
+
+  const game = new Game(ctx, canvas, database);
 
   const menu_start_buttons = document.querySelector('.menu-buttons');
+
 
   menu_start_buttons.addEventListener('click', (e) => {
     const gameArea = document.querySelector(".game-area");
@@ -89,19 +103,22 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /***/ }),
-/* 1 */
+
+/***/ 1:
 /***/ (function(module, exports, __webpack_require__) {
 
 const Minion = __webpack_require__(2); 
 const Obstacle = __webpack_require__(3);
 const Menu = __webpack_require__(4); 
+const Database = __webpack_require__(112);
 
 class Game {
 
-  constructor(ctx, canvas) {
+  constructor(ctx, canvas, database) {
     this.ctx = ctx;
     this.canvas = canvas;  
-    
+    this.database = database;
+
     this.gameOver = false; 
     this.draw = this.draw.bind(this);
     this.setKeyboardListeners();
@@ -172,6 +189,13 @@ class Game {
     this.minion.imageCount = 0;
   }
 
+  manageGameOver() {
+    this.gameOver = true; 
+    this.finalFrame = true;
+    console.log(this.globalLeaderScore);
+    this.setHighScores();
+  }
+
   draw() {
     if (!this.gameOver && !this.paused) {
       this.ctx.clearRect(0, 0, 800, 300);
@@ -183,23 +207,19 @@ class Game {
       this.obstacle2.render(this.ctx);
 
       if (this.minion.isCollidedWith(this.obstacle2)) {
-        this.gameOver = true; 
-        this.finalFrame = true;
+        this.manageGameOver();
       }
 
       if (this.difficulty === "medium-start" || this.difficulty === "hard-start")  {
         this.flyingObstacle.render(this.ctx);
 
         if (this.minion.isCollidedWith(this.flyingObstacle)) {
-          this.gameOver = true; 
-          this.finalFrame = true;
+          this.manageGameOver();
         }
       }
 
       if (this.minion.isCollidedWith(this.obstacle)) {
-        this.gameOver = true; 
-        this.finalFrame = true;
-        console.log("OVER");
+        this.manageGameOver();
       }
       
     }
@@ -280,9 +300,20 @@ class Game {
     }
   }
 
+  getHighScores() {
+    Database.fetchHighScores(this.database, this);
+  }
+
+  setHighScores() {
+    Database.setHighScores(this.database, this)
+  }
+
   start(difficulty) {
     this.canvas.classList.remove('paused');
+
     console.log(this.prevHighScore);
+    this.getHighScores();
+
     this.canvas.focus();
     this.difficulty = difficulty; 
     this.paused = false; 
@@ -296,7 +327,36 @@ class Game {
 module.exports = Game;
 
 /***/ }),
-/* 2 */
+
+/***/ 112:
+/***/ (function(module, exports) {
+
+const Database = {
+
+    fetchHighScores(database, game) {
+      database.ref(`scores/`).on('value', (snapshot) => {
+        game.globalLeaderScore = snapshot.val()
+      })
+    },
+
+    setHighScores(database, game) {
+      if (game.menu.score > game.globalLeaderScore.highscore) {
+        database.ref(`scores/highscore`).set(game.menu.score);
+      } else if (game.menu.score > game.globalLeaderScore.highscore2) {
+        database.ref(`scores/highscore2`).set(game.menu.score);
+      } else if (game.menu.score > game.globalLeaderScore.highscore3) {
+        database.ref(`scores/highscore3`).set(game.menu.score);
+      }
+    }
+    
+}
+
+
+module.exports = Database;
+
+/***/ }),
+
+/***/ 2:
 /***/ (function(module, exports) {
 
 
@@ -345,8 +405,7 @@ class Minion {
       (this.position[0] + this.width) > otherObject.position[0] &&
       this.position[1] < (otherObject.position[1] + otherObject.height) &&
       (this.position[1] + this.height) > otherObject.position[1]
-      ) {
-      console.log("collision"); 
+      ) { 
       return true;
     } else {
       return false; 
@@ -375,7 +434,8 @@ class Minion {
 module.exports = Minion; 
 
 /***/ }),
-/* 3 */
+
+/***/ 3:
 /***/ (function(module, exports) {
 
 class Obstacle {
@@ -413,7 +473,8 @@ class Obstacle {
 module.exports = Obstacle; 
 
 /***/ }),
-/* 4 */
+
+/***/ 4:
 /***/ (function(module, exports) {
 
 class Menu {
@@ -467,5 +528,6 @@ class Menu {
 module.exports = Menu;
 
 /***/ })
-/******/ ]);
+
+/******/ });
 //# sourceMappingURL=bundle.js.map
