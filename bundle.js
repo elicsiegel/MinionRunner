@@ -192,7 +192,7 @@ class Game {
   manageGameOver() {
     this.gameOver = true; 
     this.finalFrame = true;
-    console.log(this.globalLeaderScore);
+    console.log(this.globalLeaderScores);
     this.setHighScores();
   }
 
@@ -335,16 +335,17 @@ const Database = {
 
     fetchHighScores(database, game) {
       database.ref(`scores/`).on('value', (snapshot) => {
-        game.globalLeaderScore = snapshot.val()
+        game.globalLeaderScores = snapshot.val();
+        game.globalHighScore = game.globalLeaderScores.highscore
       })
     },
 
     setHighScores(database, game) {
-      if (game.menu.score > game.globalLeaderScore.highscore) {
+      if (game.menu.score > game.globalLeaderScores.highscore) {
         database.ref(`scores/highscore`).set(game.menu.score);
-      } else if (game.menu.score > game.globalLeaderScore.highscore2) {
+      } else if (game.menu.score > game.globalLeaderScores.highscore2) {
         database.ref(`scores/highscore2`).set(game.menu.score);
-      } else if (game.menu.score > game.globalLeaderScore.highscore3) {
+      } else if (game.menu.score > game.globalLeaderScores.highscore3) {
         database.ref(`scores/highscore3`).set(game.menu.score);
       }
     }
@@ -499,6 +500,7 @@ class Menu {
     ctx.fillText(`Score: ${this.score}`, 650, 40);
     ctx.font = '15px Work Sans';
     ctx.fillText(`Current High Score: ${this.game.prevHighScore}`, 600, 20);
+    ctx.fillText(`Global High Score: ${this.game.globalHighScore}`, 350, 20);
     if (this.game.muted) {
       ctx.font = '15px Work Sans';
       ctx.fillText('Muted (click screen to toggle mute)', 10, 20);
