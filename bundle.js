@@ -384,10 +384,10 @@ class Minion {
 
         if (this.frameIndex === 0) {
           this.frameIndex = 1;
-          setTimeout(() => this.image.src = "./assets/minion.png", 5);
+          setTimeout(() => this.image.src = "./assets/minion.png", 1);
         } else {
           this.frameIndex = 0;
-          setTimeout(() => this.image.src = "./assets/minion2.png", 5);
+          setTimeout(() => this.image.src = "./assets/minion2.png", 1);
         }
       }
       
@@ -396,7 +396,6 @@ class Minion {
 
   render(ctx) {
     //this method will move minion's position, using jump(), then redraw minion using draw()
-
     this.jump();
     this.draw(ctx);   
   }
