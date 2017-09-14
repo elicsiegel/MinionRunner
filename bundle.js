@@ -227,9 +227,10 @@ class Game {
       this.ctx.clearRect(0, 0, 800, 300);
       requestAnimationFrame(this.draw);
       this.menu.render(this.ctx);
-      this.minion.image.src = './assets/surprised_minion.png'; 
+    
+      this.minion.frameIndex = 2;
+      this.minion.render(this.ctx);
 
-      setTimeout(() => this.minion.render(this.ctx), 20);
       this.obstacle.render(this.ctx);
       this.obstacle2.render(this.ctx);
     }
@@ -320,7 +321,7 @@ class Game {
     this.gameOver = false; 
     this.generateMenu(this); 
     this.generatePieces();
-    setTimeout(() => this.draw(), 200);
+    this.draw();
   }
 }
 
@@ -364,14 +365,17 @@ module.exports = Database;
 class Minion {
 
   constructor(options) {
-    this.position = options.position;  
-    this.image = new Image();
-    this.image.src = './assets/minion.png'; 
+    this.position = options.position; 
+    this.images = [new Image(), new Image(), new Image()];
+    this.images[0].src = "./assets/minion.png";
+    this.images[1].src = "./assets/minion2.png";
+    this.images[2].src = "./assets/surprised_minion.png";
+
     this.width = 50;
     this.height = 50; 
     this.velocity = 10; 
     this.tickCount = 0;
-    this.ticksPerFrame = 5;
+    this.ticksPerFrame = 4;
     this.frameIndex = 0;
   }
 
@@ -384,10 +388,8 @@ class Minion {
 
         if (this.frameIndex === 0) {
           this.frameIndex = 1;
-          setTimeout(() => this.image.src = "./assets/minion.png", 1);
         } else {
           this.frameIndex = 0;
-          setTimeout(() => this.image.src = "./assets/minion2.png", 1);
         }
       }
       
@@ -427,7 +429,7 @@ class Minion {
   }
 
   draw(ctx) { 
-    ctx.drawImage(this.image, this.position[0], this.position[1], this.width, this.height);
+    ctx.drawImage(this.images[this.frameIndex], this.position[0], this.position[1], this.width, this.height);
   }
 }
 
