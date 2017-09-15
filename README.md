@@ -2,7 +2,7 @@
 
 [Play here](http://elicsiegel.com/MinionRunner/)
 
-![main](assets/main.png)
+![main](./docs/home.png)
 
 ### Background
 

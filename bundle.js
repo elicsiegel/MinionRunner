@@ -63,9 +63,8 @@
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Game = __webpack_require__(1);
@@ -90,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const menu_start_buttons = document.querySelector('.menu-buttons');
 
-
   menu_start_buttons.addEventListener('click', (e) => {
     const gameArea = document.querySelector(".game-area");
     const menu = document.querySelector(".menu");
@@ -103,14 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /***/ }),
-
-/***/ 1:
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const Minion = __webpack_require__(2); 
 const Obstacle = __webpack_require__(3);
 const Menu = __webpack_require__(4); 
-const Database = __webpack_require__(112);
+const Database = __webpack_require__(5);
 
 class Game {
 
@@ -127,6 +124,7 @@ class Game {
     this.jumpSound = new Audio('./assets/audio/jump1.m4a');
     this.gameOverSound = new Audio('./assets/audio/game_over.mp3');
     this.prevHighScore = 0;
+    this.stageCount = 0;
   }
 
   setKeyboardListeners() {
@@ -196,33 +194,151 @@ class Game {
     this.setHighScores();
   }
 
+  unleashEvilMinions() { 
+      if (this.evilMinion.activated) {
+        this.evilMinion.update();
+        this.evilMinion.render(this.ctx);
+
+        if (this.minion.isCollidedWith(this.evilMinion)) {
+          this.manageGameOver();
+        } 
+
+        if (this.evilMinion.timesPassed > 1) {
+          this.evilMinion.activated = false 
+        }   
+      }
+
+      if (this.evilMinion2.activated) {
+        this.evilMinion2.update();
+        this.evilMinion2.render(this.ctx);
+
+        if (this.minion.isCollidedWith(this.evilMinion2)) {
+          this.manageGameOver();
+        }
+        if (this.evilMinion2.timesPassed > 1) {
+          this.evilMinion2.activated = false 
+        }     
+      }
+
+      if (this.evilMinion3.activated) {
+        this.evilMinion3.update();
+        this.evilMinion3.render(this.ctx);
+
+        if (this.minion.isCollidedWith(this.evilMinion3)) {
+          this.manageGameOver();
+        }
+        if (this.evilMinion3.timesPassed > 1) {
+          this.evilMinion3.activated = false 
+        }     
+      }
+
+      if (this.evilMinion4.activated) {
+        this.evilMinion4.update();
+        this.evilMinion4.render(this.ctx);
+
+        if (this.minion.isCollidedWith(this.evilMinion4)) {
+          this.manageGameOver();
+        }
+        if (this.evilMinion4.timesPassed > 1) {
+          this.evilMinion4.activated = false 
+        }     
+      }
+  
+  }
+
   draw() {
     if (!this.gameOver && !this.paused) {
+      this.stageCount += 1; 
+
       this.ctx.clearRect(0, 0, 800, 300);
       requestAnimationFrame(this.draw);
       this.menu.render(this.ctx);
       this.minion.update();
       this.minion.render(this.ctx); 
-      this.obstacle.render(this.ctx);
-      this.obstacle2.render(this.ctx);
 
-      if (this.minion.isCollidedWith(this.obstacle2)) {
-        this.manageGameOver();
+      if (this.stageCount > 800 && this.stageCount < 1000) {
+        this.stage = 2;
+        this.menu.renderStageCompletion(this.ctx);
+        this.evilMinion.position = [900, 250];
+        this.evilMinion2.position = [1200, 250];
+        this.evilMinion3.position = [1500, 250];
+        this.evilMinion4.position = [1800, 250];
+
+        this.evilMinion.activated = true;
+        this.evilMinion.timesPassed = 0;
+        this.evilMinion2.activated = true;
+        this.evilMinion2.timesPassed = 0;
+        this.evilMinion3.activated = true;
+        this.evilMinion3.timesPassed = 0;
+        this.evilMinion4.activated = true;
+        this.evilMinion4.timesPassed = 0;
       }
 
-      if (this.difficulty === "medium-start" || this.difficulty === "hard-start")  {
-        this.flyingObstacle.render(this.ctx);
+      if (this.stageCount > 1700) {
+        this.menu.renderSurvivalCompletion(this.ctx);
+      }
 
-        if (this.minion.isCollidedWith(this.flyingObstacle)) {
-          this.manageGameOver();
+      if (this.stageCount > 1800) {
+
+        this.stageCount = 0;
+        this.stage = 1;
+        this.obstacle.position = [725, 200];
+        this.obstacle2.position = [1200, 200]; 
+
+        this.obstacle.activated = true;
+        this.obstacle2.activated = true;
+
+        if (this.flyingObstacle) {
+          this.flyingObstacle.position = [2000, 60];
+          this.flyingObstacle.activated = true;
         }
       }
 
-      if (this.minion.isCollidedWith(this.obstacle)) {
-        this.manageGameOver();
+      if (this.stage === 1) {
+
+        if (this.obstacle.activated) { 
+          this.obstacle.render(this.ctx);
+
+          if (this.minion.isCollidedWith(this.obstacle)) {
+            this.manageGameOver();
+          }
+          if (this.obstacle.timesPassed > 2) {
+            this.obstacle.activated = false;
+            this.obstacle.timesPassed = 0;
+          }
+        }
+
+        if (this.obstacle2.activated) {
+          this.obstacle2.render(this.ctx); 
+          if (this.minion.isCollidedWith(this.obstacle2)) {
+            this.manageGameOver();
+          }
+          if (this.obstacle2.timesPassed > 2) {
+            this.obstacle2.activated = false;
+            this.obstacle2.timesPassed = 0;
+          } 
+        }
+
+        if (this.difficulty === "medium-start" || this.difficulty === "hard-start")  {
+          if (this.flyingObstacle.activated) {
+            this.flyingObstacle.render(this.ctx);
+
+            if (this.minion.isCollidedWith(this.flyingObstacle)) {
+              this.manageGameOver();
+            }
+            if (this.flyingObstacle.timesPassed > 2) {
+              this.flyingObstacle.activated = false;
+              this.flyingObstacle.timesPassed = 0;
+            }
+          }
+        }
       }
-      
+
+      if (this.stage === 2) {
+        this.unleashEvilMinions();
+      }  
     }
+
     if (this.finalFrame) {
       this.ctx.clearRect(0, 0, 800, 300);
       requestAnimationFrame(this.draw);
@@ -254,9 +370,11 @@ class Game {
     const defaultValues = {
       skyscraperVelocity: 4,
       airplaneVelocity: 4,
+      evilMinionVelocity: 4, 
       skyscraperImage: './assets/skyscraper.png',
       skyscraperWidth: 80,
       skyscraper2Image: './assets/fat-tall-sky.png',
+      evilMinionSrcs: ['./assets/evil_minion1.png', './assets/evil_minion2.png', './assets/evil_minion3.png', './assets/evil_minion4.png', './assets/evil_minion5.png', './assets/evil_minion6.png']
     }
 
     switch (this.difficulty) {
@@ -267,7 +385,7 @@ class Game {
       case "medium-start":
         let mediumValues = {
           skyscraperVelocity: 4,
-          airplaneVelocity: 8,
+          airplaneVelocity: 10,
         }
 
         return Object.assign({}, defaultValues, mediumValues);
@@ -275,7 +393,7 @@ class Game {
       case "hard-start":
         let hardValues = {
           skyscraperVelocity: 5,
-          airplaneVelocity: 10,
+          airplaneVelocity: 12,
         }
         return Object.assign({}, defaultValues, hardValues);
         break;
@@ -292,12 +410,19 @@ class Game {
 
     this.minion = new Minion({ position: [10, 250] });
 
-    this.obstacle = new Obstacle({position: [725, 200], resetPosition: 1000, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, src: gameValues.skyscraperImage });
-    this.obstacle2 = new Obstacle({position: [1200, 200], resetPosition: 1000, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, src: gameValues.skyscraper2Image });
+    this.obstacle = new Obstacle({position: [725, 200], resetPosition: 1100, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, srcs: [gameValues.skyscraperImage] });
+    this.obstacle2 = new Obstacle({position: [1200, 200], resetPosition: 1100, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, srcs: [gameValues.skyscraper2Image] });
+
+    this.evilMinion = new Obstacle({position: [900, 250], resetPosition: 1100, velocity: gameValues.evilMinionVelocity, width: 50, height: 50, srcs: gameValues.evilMinionSrcs }); 
+
+    this.evilMinion2 = new Obstacle({position: [1200, 250], resetPosition: 1100, velocity: gameValues.evilMinionVelocity, width: 50, height: 50, srcs: gameValues.evilMinionSrcs });
+
+    this.evilMinion3 = new Obstacle({position: [1500, 250], resetPosition: 1100, velocity: gameValues.evilMinionVelocity, width: 50, height: 50, srcs: gameValues.evilMinionSrcs }); 
+
+    this.evilMinion4 = new Obstacle({position: [1800, 250], resetPosition: 1100, velocity: gameValues.evilMinionVelocity, width: 50, height: 50, srcs: gameValues.evilMinionSrcs }); 
 
     if (this.difficulty === "medium-start" || this.difficulty === "hard-start") {
-
-      this.flyingObstacle = new Obstacle( { position: [2000, 60], resetPosition: 2000, velocity: gameValues.airplaneVelocity, width: 50, height: 40, src: './assets/airplane.png'} );  
+      this.flyingObstacle = new Obstacle( { position: [2000, 60], resetPosition: 2000, velocity: gameValues.airplaneVelocity, width: 50, height: 40, srcs: ['./assets/airplane.png']} );  
     }
   }
 
@@ -316,7 +441,9 @@ class Game {
     this.getHighScores();
 
     this.canvas.focus();
-    this.difficulty = difficulty; 
+    this.difficulty = difficulty;
+    this.stage = 1;
+    this.stageCount = 0;   
     this.paused = false; 
     this.gameOver = false; 
     this.generateMenu(this); 
@@ -328,37 +455,7 @@ class Game {
 module.exports = Game;
 
 /***/ }),
-
-/***/ 112:
-/***/ (function(module, exports) {
-
-const Database = {
-
-    fetchHighScores(database, game) {
-      database.ref(`scores/`).on('value', (snapshot) => {
-        game.globalLeaderScores = snapshot.val();
-        game.globalHighScore = game.globalLeaderScores.highscore
-      })
-    },
-
-    setHighScores(database, game) {
-      if (game.menu.score > game.globalLeaderScores.highscore) {
-        database.ref(`scores/highscore`).set(game.menu.score);
-      } else if (game.menu.score > game.globalLeaderScores.highscore2) {
-        database.ref(`scores/highscore2`).set(game.menu.score);
-      } else if (game.menu.score > game.globalLeaderScores.highscore3) {
-        database.ref(`scores/highscore3`).set(game.menu.score);
-      }
-    }
-    
-}
-
-
-module.exports = Database;
-
-/***/ }),
-
-/***/ 2:
+/* 2 */
 /***/ (function(module, exports) {
 
 
@@ -437,8 +534,7 @@ class Minion {
 module.exports = Minion; 
 
 /***/ }),
-
-/***/ 3:
+/* 3 */
 /***/ (function(module, exports) {
 
 class Obstacle {
@@ -446,11 +542,50 @@ class Obstacle {
   constructor(options) {
     this.position = options.position;  
     this.resetPosition = options.resetPosition; 
-    this.image = new Image();
-    this.image.src = options.src; 
+    
     this.velocity = options.velocity;
     this.width = options.width;
     this.height = options.height;  
+
+    this.frameIndex = 0;
+    this.srcs = options.srcs;
+    this.generateImages(); 
+
+    this.tickCount = 0;
+    this.ticksPerFrame = 4;
+    this.timesPassed = 0;
+    this.activated = true;
+  }
+
+  generateImages() {
+    if (this.srcs.length > 1) {
+      this.images = [];
+
+      for (let i=0; i < this.srcs.length; i++) {
+        this.images.push(new Image);
+        this.images[i].src = this.srcs[i];
+      }
+    } else {
+      this.images = [new Image];
+      this.images[0].src = this.srcs[0];
+    }
+  }
+
+  update() {
+    if (this.images.length > 1) {
+      this.tickCount += 1;
+
+      if (this.tickCount > this.ticksPerFrame) {
+        this.tickCount = 0;
+        this.frameIndex += 1; 
+
+        if (this.frameIndex === 5) {
+          this.frameIndex = 0;
+        }
+      }
+    } else {
+      this.frameIndex = 0; 
+    }
   }
 
   render(ctx) {
@@ -462,6 +597,7 @@ class Obstacle {
   move() {
     if (this.position[0] <= -45) {
       this.position[0] = this.resetPosition;
+      this.timesPassed += 1; 
     } else {
       this.position[0] -= this.velocity;  
     }
@@ -469,15 +605,14 @@ class Obstacle {
 
   draw(ctx) {
     //last two numbers of draw image are position, last two of draw image are size 
-    ctx.drawImage(this.image, this.position[0], this.position[1], this.width, this.height);
+    ctx.drawImage(this.images[this.frameIndex], this.position[0], this.position[1], this.width, this.height);
   }
 }
 
 module.exports = Obstacle; 
 
 /***/ }),
-
-/***/ 4:
+/* 4 */
 /***/ (function(module, exports) {
 
 class Menu {
@@ -491,6 +626,15 @@ class Menu {
     this.highScore = null; 
   }
 
+  renderStageCompletion(ctx) {
+    ctx.font = '25px Work Sans';
+    ctx.fillText(`Oh no! Evil Minions are on the loose!`, 200, 80);
+  }
+
+  renderSurvivalCompletion(ctx) {
+    ctx.font = '25px Work Sans';
+    ctx.fillText(`You survived the Evil Minions!`, 200, 80);
+  }
 
   render(ctx) {
     this.draw(ctx);
@@ -501,7 +645,7 @@ class Menu {
     ctx.font = '20px Work Sans';
     ctx.fillText(`Score: ${this.score}`, 650, 40);
     ctx.font = '15px Work Sans';
-    ctx.fillText(`Current High Score: ${this.game.prevHighScore}`, 600, 20);
+    ctx.fillText(`Local High Score: ${this.game.prevHighScore}`, 600, 20);
 
     if (this.game.globalHighScore !== undefined) {
       ctx.fillText(`Global High Score: ${this.game.globalHighScore}`, 350, 20);
@@ -535,7 +679,34 @@ class Menu {
 
 module.exports = Menu;
 
-/***/ })
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
 
-/******/ });
+const Database = {
+
+    fetchHighScores(database, game) {
+      database.ref(`scores/`).on('value', (snapshot) => {
+        game.globalLeaderScores = snapshot.val();
+        game.globalHighScore = game.globalLeaderScores.highscore
+      })
+    },
+
+    setHighScores(database, game) {
+      if (game.menu.score > game.globalLeaderScores.highscore) {
+        database.ref(`scores/highscore`).set(game.menu.score);
+      } else if (game.menu.score > game.globalLeaderScores.highscore2) {
+        database.ref(`scores/highscore2`).set(game.menu.score);
+      } else if (game.menu.score > game.globalLeaderScores.highscore3) {
+        database.ref(`scores/highscore3`).set(game.menu.score);
+      }
+    }
+    
+}
+
+
+module.exports = Database;
+
+/***/ })
+/******/ ]);
 //# sourceMappingURL=bundle.js.map
