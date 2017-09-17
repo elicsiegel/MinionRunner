@@ -145,7 +145,7 @@ class Game {
           console.log(e.keyCode);
       }
     });
-    
+
     const jumpButton = document.querySelector(".jump-button");
     jumpButton.addEventListener('click', (e) => {
       this.activateJump(); 
@@ -196,57 +196,37 @@ class Game {
     this.gameOver = true; 
     this.finalFrame = true;
     console.log(this.globalLeaderScores);
-    this.setHighScores();
+    // this.setHighScores();
+  }
+
+  manageEvilMinion(evilMinion) {
+    evilMinion.update();
+    evilMinion.render(this.ctx);
+
+    if (this.minion.isCollidedWith(evilMinion)) {
+      this.manageGameOver();
+    } 
+
+    if (evilMinion.timesPassed > 1) {
+      evilMinion.activated = false 
+    } 
   }
 
   unleashEvilMinions() { 
       if (this.evilMinion.activated) {
-        this.evilMinion.update();
-        this.evilMinion.render(this.ctx);
-
-        if (this.minion.isCollidedWith(this.evilMinion)) {
-          this.manageGameOver();
-        } 
-
-        if (this.evilMinion.timesPassed > 1) {
-          this.evilMinion.activated = false 
-        }   
+        this.manageEvilMinion(this.evilMinion);
       }
 
       if (this.evilMinion2.activated) {
-        this.evilMinion2.update();
-        this.evilMinion2.render(this.ctx);
-
-        if (this.minion.isCollidedWith(this.evilMinion2)) {
-          this.manageGameOver();
-        }
-        if (this.evilMinion2.timesPassed > 1) {
-          this.evilMinion2.activated = false 
-        }     
+        this.manageEvilMinion(this.evilMinion2);     
       }
 
       if (this.evilMinion3.activated) {
-        this.evilMinion3.update();
-        this.evilMinion3.render(this.ctx);
-
-        if (this.minion.isCollidedWith(this.evilMinion3)) {
-          this.manageGameOver();
-        }
-        if (this.evilMinion3.timesPassed > 1) {
-          this.evilMinion3.activated = false 
-        }     
+        this.manageEvilMinion(this.evilMinion3);   
       }
 
       if (this.evilMinion4.activated) {
-        this.evilMinion4.update();
-        this.evilMinion4.render(this.ctx);
-
-        if (this.minion.isCollidedWith(this.evilMinion4)) {
-          this.manageGameOver();
-        }
-        if (this.evilMinion4.timesPassed > 1) {
-          this.evilMinion4.activated = false 
-        }     
+        this.manageEvilMinion(this.evilMinion4);    
       }
   
   }
@@ -356,9 +336,8 @@ class Game {
 
     if (this.finalFrame) {
       this.ctx.clearRect(0, 0, 800, 300);
-      // requestAnimationFrame(this.draw);
       this.menu.render(this.ctx);
-    
+      this.setHighScores();
       this.minion.frameIndex = 2;
       this.minion.render(this.ctx);
 
@@ -714,7 +693,7 @@ const Database = {
       database.ref(`scores/`).on('value', (snapshot) => {
         game.globalLeaderScores = snapshot.val();
         game.globalHighScore = game.globalLeaderScores.highscore
-      })
+      });
     },
 
     setHighScores(database, game) {
