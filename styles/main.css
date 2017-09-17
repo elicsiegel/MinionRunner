@@ -93,7 +93,7 @@ canvas {
   justify-content: center;
 }
 
-.menu-buttons button {
+ button {
   padding: 10px;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.9);
@@ -102,6 +102,14 @@ canvas {
   cursor: pointer;
   margin-right: 3px;
   margin-left: 3px;
+  outline: none;
+}
+
+.jump-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .hide {

@@ -145,6 +145,11 @@ class Game {
           console.log(e.keyCode);
       }
     });
+    
+    const jumpButton = document.querySelector(".jump-button");
+    jumpButton.addEventListener('click', (e) => {
+      this.activateJump(); 
+    });
   }
 
   setEventListeners() {
