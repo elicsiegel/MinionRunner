@@ -14,7 +14,27 @@ You, a minion, have just seen a truck full of bananas pass by and can't miss thi
 
 ### How to Play
 
-Choose a level of difficulty and start to play. Avoid hitting various obstacles by hitting `SPACE`. Press `p` to pause the game and `r` to restart the game once the game is over. Click on the screen to mute all gameplay audio. 
+Choose a level of difficulty and start to play. Avoid hitting various obstacles by hitting `SPACE` or by clicking the `Jump!` button. Press `p` to pause the game and `r` to restart the game once the game is over. Click on the screen to mute all gameplay audio. 
+
+User interaction with the game was implemented with event listeners on the keyboard written in vanilla JavaScript.
+
+```javascript
+  document.addEventListener('keydown', (e) => {
+    switch (e.keyCode) {
+      case 32: 
+        this.activateJump(); 
+        break;
+      case 82:
+        if (this.gameOver === true) {
+          this.resetGame();
+        }
+        break;
+      case 80:
+        this.togglePause();
+        break;
+    }
+  });
+```
 
 ### Features
 
