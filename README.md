@@ -25,7 +25,7 @@ User interaction with the game was implemented with event listeners on the keybo
         this.activateJump(); 
         break;
       case 82:
-        if (this.gameOver === true) {
+        if (this.gameOver) {
           this.resetGame();
         }
         break;
