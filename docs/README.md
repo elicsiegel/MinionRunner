@@ -40,9 +40,6 @@ In addition to the entry file, there will be several main scripts involved in th
 
 `obstacle.js`: this script will handle the logic for the obstacles. There will be two sub obstacles, skyscrapers that the minion must jump over and airplanes flying above that the player must not hit. 
 
-`board.js`: this script will handle object rendering on the board.
-
-`difficulty.js`: provides settings for different levels of difficulty
 
 ### Implementation Timeline
 
