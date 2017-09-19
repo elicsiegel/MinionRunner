@@ -112,6 +112,32 @@ canvas {
   margin-top: 20px;
 }
 
+.global-high-scores {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.global-high-scores p {
+  margin: 2px;
+}
+
+.global-high-scores div {
+  margin-top: 5px;
+  border-radius: 10px;
+  border: 1px solid black;
+  text-align: center;
+}
+
+.global-high-scores h4 {
+  margin: 0px;
+  padding: 3px;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  background: rgba(180, 180, 180, 0.9);
+}
+
+
 .hide {
   display: none; 
 }

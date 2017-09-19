@@ -60,14 +60,47 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports) {
+
+const Database = {
+
+    fetchHighScores(database, game) {
+      database.ref(`scores/`).on('value', (snapshot) => {
+        document.getElementById("highscore1").textContent = "1: " + snapshot.val().highscore;
+        document.getElementById("highscore2").textContent = "2: " + snapshot.val().highscore2;
+        document.getElementById("highscore3").textContent = "3: " + snapshot.val().highscore3;
+
+        game.globalLeaderScores = snapshot.val();
+        game.globalHighScore = game.globalLeaderScores.highscore
+      });
+    },
+
+    setHighScores(database, game) {
+      if (game.menu.score > game.globalLeaderScores.highscore) {
+        database.ref(`scores/highscore`).set(game.menu.score);
+      } else if (game.menu.score > game.globalLeaderScores.highscore2) {
+        database.ref(`scores/highscore2`).set(game.menu.score);
+      } else if (game.menu.score > game.globalLeaderScores.highscore3) {
+        database.ref(`scores/highscore3`).set(game.menu.score);
+      }
+    }
+    
+}
+
+
+module.exports = Database;
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Game = __webpack_require__(1);
+const Game = __webpack_require__(2);
+const Database = __webpack_require__(0);
 
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('game-canvas');
@@ -92,22 +125,26 @@ document.addEventListener('DOMContentLoaded', () => {
   menu_start_buttons.addEventListener('click', (e) => {
     const gameArea = document.querySelector(".game-area");
     const menu = document.querySelector(".menu");
+    const jumpButton = document.querySelector(".jump-button");
+    const globalHighScores = document.querySelector(".global-high-scores");
 
-    gameArea.classList.remove('hide'); 
+    gameArea.classList.remove('hide');
+    jumpButton.classList.remove('hide'); 
     menu.classList.add('hide');
+    globalHighScores.classList.add('hide');
     setTimeout(() => game.start(e.target.id), 200);
   });
 
 });
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Minion = __webpack_require__(2); 
-const Obstacle = __webpack_require__(3);
-const Menu = __webpack_require__(4); 
-const Database = __webpack_require__(5);
+const Minion = __webpack_require__(3); 
+const Obstacle = __webpack_require__(4);
+const Menu = __webpack_require__(5); 
+const Database = __webpack_require__(0);
 
 class Game {
 
@@ -125,6 +162,7 @@ class Game {
     this.gameOverSound = new Audio('./assets/audio/game_over.mp3');
     this.prevHighScore = 0;
     this.stageCount = 0;
+    this.getHighScores();
   }
 
   setKeyboardListeners() {
@@ -134,7 +172,7 @@ class Game {
           this.activateJump(); 
           break;
         case 82:
-          if (this.gameOver === true) {
+          if (this.gameOver) {
             this.resetGame();
           }
           break;
@@ -442,7 +480,7 @@ class Game {
 
   start(difficulty) {
     this.canvas.classList.remove('paused');
-    this.getHighScores();
+    
 
     this.canvas.focus();
     this.difficulty = difficulty;
@@ -459,7 +497,7 @@ class Game {
 module.exports = Game;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports) {
 
 
@@ -538,7 +576,7 @@ class Minion {
 module.exports = Minion; 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports) {
 
 class Obstacle {
@@ -562,16 +600,11 @@ class Obstacle {
   }
 
   generateImages() {
-    if (this.srcs.length > 1) {
-      this.images = [];
+    this.images = [];
 
-      for (let i=0; i < this.srcs.length; i++) {
-        this.images.push(new Image);
-        this.images[i].src = this.srcs[i];
-      }
-    } else {
-      this.images = [new Image];
-      this.images[0].src = this.srcs[0];
+    for (let i=0; i < this.srcs.length; i++) {
+      this.images.push(new Image);
+      this.images[i].src = this.srcs[i];
     }
   }
 
@@ -616,7 +649,7 @@ class Obstacle {
 module.exports = Obstacle; 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports) {
 
 class Menu {
@@ -656,10 +689,8 @@ class Menu {
     }
     
     if (this.game.muted) {
-      ctx.font = '15px Work Sans';
       ctx.fillText('Muted (click screen to toggle mute)', 10, 20);
     } else {
-      ctx.font = '15px Work Sans';
       ctx.fillText('Umuted (click screen to toggle mute)', 10, 20);
     }
   }
@@ -682,34 +713,6 @@ class Menu {
 }
 
 module.exports = Menu;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-const Database = {
-
-    fetchHighScores(database, game) {
-      database.ref(`scores/`).on('value', (snapshot) => {
-        game.globalLeaderScores = snapshot.val();
-        game.globalHighScore = game.globalLeaderScores.highscore
-      });
-    },
-
-    setHighScores(database, game) {
-      if (game.menu.score > game.globalLeaderScores.highscore) {
-        database.ref(`scores/highscore`).set(game.menu.score);
-      } else if (game.menu.score > game.globalLeaderScores.highscore2) {
-        database.ref(`scores/highscore2`).set(game.menu.score);
-      } else if (game.menu.score > game.globalLeaderScores.highscore3) {
-        database.ref(`scores/highscore3`).set(game.menu.score);
-      }
-    }
-    
-}
-
-
-module.exports = Database;
 
 /***/ })
 /******/ ]);
