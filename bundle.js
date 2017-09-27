@@ -82,8 +82,11 @@ const Database = {
 
     setHighScores(database, game) {
       if (game.menu.score > game.globalLeaderScores.highscore) {
+        database.ref(`scores/highscore3`).set(game.globalLeaderScores.highscore2);
+        database.ref(`scores/highscore2`).set(game.globalLeaderScores.highscore);
         database.ref(`scores/highscore`).set(game.menu.score);
       } else if (game.menu.score > game.globalLeaderScores.highscore2) {
+        database.ref(`scores/highscore3`).set(game.globalLeaderScores.highscore2);
         database.ref(`scores/highscore2`).set(game.menu.score);
       } else if (game.menu.score > game.globalLeaderScores.highscore3) {
         database.ref(`scores/highscore3`).set(game.menu.score);
@@ -179,8 +182,6 @@ class Game {
         case 80:
           this.togglePause();
           break;
-        default:
-          console.log(e.keyCode);
       }
     });
 
@@ -200,7 +201,6 @@ class Game {
     } else {
       this.muted = false; 
     }
-    console.log(this.muted);
   }
 
   resetGame() {
@@ -233,8 +233,6 @@ class Game {
   manageGameOver() {
     this.gameOver = true; 
     this.finalFrame = true;
-    console.log(this.globalLeaderScores);
-    // this.setHighScores();
   }
 
   manageEvilMinion(evilMinion) {
@@ -270,7 +268,7 @@ class Game {
   }
 
   prepareStageTwo() {
-    if (this.stageCount > 800 && this.stageCount < 1000) {
+    if (this.stageCount > 880 && this.stageCount < 1000) {
       this.stage = 2;
       this.menu.renderStageCompletion(this.ctx);
       this.evilMinion.position = [900, 250];
@@ -480,8 +478,6 @@ class Game {
 
   start(difficulty) {
     this.canvas.classList.remove('paused');
-    
-
     this.canvas.focus();
     this.difficulty = difficulty;
     this.stage = 1;
