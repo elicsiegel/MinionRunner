@@ -144,23 +144,23 @@ document.addEventListener('DOMContentLoaded', () => {
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Minion = __webpack_require__(3); 
+const Minion = __webpack_require__(3);
 const Obstacle = __webpack_require__(4);
-const Menu = __webpack_require__(5); 
+const Menu = __webpack_require__(5);
 const Database = __webpack_require__(0);
 
 class Game {
 
   constructor(ctx, canvas, database) {
     this.ctx = ctx;
-    this.canvas = canvas;  
+    this.canvas = canvas;
     this.database = database;
 
-    this.gameOver = false; 
+    this.gameOver = false;
     this.draw = this.draw.bind(this);
     this.setKeyboardListeners();
     this.setEventListeners();
-    this.muted = false; 
+    this.muted = false;
     this.jumpSound = new Audio('./assets/audio/jump1.m4a');
     this.gameOverSound = new Audio('./assets/audio/game_over.mp3');
     this.prevHighScore = 0;
@@ -171,8 +171,8 @@ class Game {
   setKeyboardListeners() {
     document.addEventListener('keydown', (e) => {
       switch (e.keyCode) {
-        case 32: 
-          this.activateJump(); 
+        case 32:
+          this.activateJump();
           break;
         case 82:
           if (this.gameOver) {
@@ -187,7 +187,7 @@ class Game {
 
     const jumpButton = document.querySelector(".jump-button");
     jumpButton.addEventListener('click', (e) => {
-      this.activateJump(); 
+      this.activateJump();
     });
   }
 
@@ -199,26 +199,26 @@ class Game {
     if (this.muted === false) {
       this.muted = true;
     } else {
-      this.muted = false; 
+      this.muted = false;
     }
   }
 
   resetGame() {
     if (this.menu.highScore > this.prevHighScore) {
-      this.prevHighScore = this.menu.highScore; 
+      this.prevHighScore = this.menu.highScore;
     }
     this.start(this.difficulty);
   }
 
   togglePause() {
     if (this.paused === false) {
-      this.canvas.classList.add('paused'); 
+      this.canvas.classList.add('paused');
       this.paused = true;
     } else {
-      this.canvas.classList.remove('paused'); 
+      this.canvas.classList.remove('paused');
       this.paused = false;
       this.draw();
-    } 
+    }
   }
 
   activateJump() {
@@ -226,12 +226,12 @@ class Game {
       this.jumpSound.play();
     }
 
-    this.minion.jumping = true; 
+    this.minion.jumping = true;
     this.minion.imageCount = 0;
   }
 
   manageGameOver() {
-    this.gameOver = true; 
+    this.gameOver = true;
     this.finalFrame = true;
   }
 
@@ -241,30 +241,30 @@ class Game {
 
     if (this.minion.isCollidedWith(evilMinion)) {
       this.manageGameOver();
-    } 
+    }
 
     if (evilMinion.timesPassed > 1) {
-      evilMinion.activated = false 
-    } 
+      evilMinion.activated = false
+    }
   }
 
-  unleashEvilMinions() { 
+  unleashEvilMinions() {
       if (this.evilMinion.activated) {
         this.manageEvilMinion(this.evilMinion);
       }
 
       if (this.evilMinion2.activated) {
-        this.manageEvilMinion(this.evilMinion2);     
+        this.manageEvilMinion(this.evilMinion2);
       }
 
       if (this.evilMinion3.activated) {
-        this.manageEvilMinion(this.evilMinion3);   
+        this.manageEvilMinion(this.evilMinion3);
       }
 
       if (this.evilMinion4.activated) {
-        this.manageEvilMinion(this.evilMinion4);    
+        this.manageEvilMinion(this.evilMinion4);
       }
-  
+
   }
 
   prepareStageTwo() {
@@ -297,7 +297,7 @@ class Game {
       this.stageCount = 0;
       this.stage = 1;
       this.obstacle.position = [725, 200];
-      this.obstacle2.position = [1200, 200]; 
+      this.obstacle2.position = [1200, 200];
 
       this.obstacle.activated = true;
       this.obstacle2.activated = true;
@@ -310,7 +310,7 @@ class Game {
   }
 
   drawStageOne() {
-    if (this.obstacle.activated) { 
+    if (this.obstacle.activated) {
       this.obstacle.render(this.ctx);
 
       if (this.minion.isCollidedWith(this.obstacle)) {
@@ -323,14 +323,14 @@ class Game {
     }
 
     if (this.obstacle2.activated) {
-      this.obstacle2.render(this.ctx); 
+      this.obstacle2.render(this.ctx);
       if (this.minion.isCollidedWith(this.obstacle2)) {
         this.manageGameOver();
       }
       if (this.obstacle2.timesPassed > 2) {
         this.obstacle2.activated = false;
         this.obstacle2.timesPassed = 0;
-      } 
+      }
     }
 
     if (this.difficulty === "medium-start" || this.difficulty === "hard-start")  {
@@ -350,24 +350,24 @@ class Game {
 
   draw() {
     if (!this.gameOver && !this.paused) {
-      this.stageCount += 1; 
+      this.stageCount += 1;
 
       this.ctx.clearRect(0, 0, 800, 300);
       requestAnimationFrame(this.draw);
       this.menu.render(this.ctx);
       this.minion.update();
-      this.minion.render(this.ctx); 
+      this.minion.render(this.ctx);
 
       this.prepareStageTwo();
       this.resetToStageOne();
 
       if (this.stage === 1) {
-        this.drawStageOne(); 
+        this.drawStageOne();
       }
 
       if (this.stage === 2) {
         this.unleashEvilMinions();
-      }  
+      }
     }
 
     if (this.finalFrame) {
@@ -377,7 +377,7 @@ class Game {
       this.minion.frameIndex = 2;
       this.minion.render(this.ctx);
 
-      if (this.stage === 1) { 
+      if (this.stage === 1) {
         this.obstacle.render(this.ctx);
         this.obstacle2.render(this.ctx);
 
@@ -412,7 +412,9 @@ class Game {
     const defaultValues = {
       skyscraperVelocity: 4,
       airplaneVelocity: 4,
-      evilMinionVelocity: 4, 
+      evilMinionHeight: 50,
+      evilMinionWidth: 50,
+      evilMinionVelocity: 4,
       skyscraperImage: './assets/skyscraper.png',
       skyscraperWidth: 80,
       skyscraper2Image: './assets/fat-tall-sky.png',
@@ -420,7 +422,7 @@ class Game {
     }
 
     switch (this.difficulty) {
-      case "easy-start": 
+      case "easy-start":
         return Object.assign({}, defaultValues);
         break;
 
@@ -445,7 +447,7 @@ class Game {
   generatePieces() {
     const defaultValues = {
       skyscraperVelocity: 4,
-      airplaneVelocity: 2
+      airplaneVelocity: 2,
     }
 
     let gameValues = this.setDifficulty();
@@ -455,16 +457,16 @@ class Game {
     this.obstacle = new Obstacle({position: [725, 200], resetPosition: 1100, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, srcs: [gameValues.skyscraperImage] });
     this.obstacle2 = new Obstacle({position: [1200, 200], resetPosition: 1100, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, srcs: [gameValues.skyscraper2Image] });
 
-    this.evilMinion = new Obstacle({position: [900, 250], resetPosition: 1100, velocity: gameValues.evilMinionVelocity, width: 50, height: 50, srcs: gameValues.evilMinionSrcs }); 
+    this.evilMinion = new Obstacle({position: [900, 250], resetPosition: 1100, velocity: gameValues.evilMinionVelocity, width: gameValues.evilMinionWidth, height: gameValues.evilMinionHeight, srcs: gameValues.evilMinionSrcs });
 
-    this.evilMinion2 = new Obstacle({position: [1200, 250], resetPosition: 1100, velocity: gameValues.evilMinionVelocity, width: 50, height: 50, srcs: gameValues.evilMinionSrcs });
+    this.evilMinion2 = new Obstacle({position: [1200, 250], resetPosition: 1100, velocity: gameValues.evilMinionVelocity, width: gameValues.evilMinionWidth, height: gameValues.evilMinionHeight, srcs: gameValues.evilMinionSrcs });
 
-    this.evilMinion3 = new Obstacle({position: [1500, 250], resetPosition: 1100, velocity: gameValues.evilMinionVelocity, width: 50, height: 50, srcs: gameValues.evilMinionSrcs }); 
+    this.evilMinion3 = new Obstacle({position: [1500, 250], resetPosition: 1100, velocity: gameValues.evilMinionVelocity, width: gameValues.evilMinionWidth, height: gameValues.evilMinionHeight, srcs: gameValues.evilMinionSrcs });
 
-    this.evilMinion4 = new Obstacle({position: [1800, 250], resetPosition: 1100, velocity: gameValues.evilMinionVelocity, width: 50, height: 50, srcs: gameValues.evilMinionSrcs }); 
+    this.evilMinion4 = new Obstacle({position: [1800, 250], resetPosition: 1100, velocity: gameValues.evilMinionVelocity, width: gameValues.evilMinionWidth, height: gameValues.evilMinionHeight, srcs: gameValues.evilMinionSrcs });
 
     if (this.difficulty === "medium-start" || this.difficulty === "hard-start") {
-      this.flyingObstacle = new Obstacle( { position: [2000, 60], resetPosition: 2000, velocity: gameValues.airplaneVelocity, width: 50, height: 40, srcs: ['./assets/airplane.png']} );  
+      this.flyingObstacle = new Obstacle( { position: [2000, 60], resetPosition: 2000, velocity: gameValues.airplaneVelocity, width: 50, height: 40, srcs: ['./assets/airplane.png']} );
     }
   }
 
@@ -481,16 +483,17 @@ class Game {
     this.canvas.focus();
     this.difficulty = difficulty;
     this.stage = 1;
-    this.stageCount = 0;   
-    this.paused = false; 
-    this.gameOver = false; 
-    this.generateMenu(this); 
+    this.stageCount = 0;
+    this.paused = false;
+    this.gameOver = false;
+    this.generateMenu(this);
     this.generatePieces();
     this.draw();
   }
 }
 
 module.exports = Game;
+
 
 /***/ }),
 /* 3 */
