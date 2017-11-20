@@ -423,6 +423,8 @@ class Game {
       evilMinionFourPosition: [1800, 250],
       skyscraperOnePosition: [725, 200],
       skyscraperTwoPosition: [1200, 200],
+      flyingObstaclePosition: [2000, 60],
+      flyingObstacleResetPosition: 2000,
       skyscraperImage: './assets/skyscraper.png',
       skyscraperWidth: 80,
       skyscraperHeight: 100,
@@ -471,7 +473,7 @@ class Game {
     this.evilMinion4 = new Obstacle({position: gameValues.evilMinionFourPosition, resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.evilMinionVelocity, width: gameValues.evilMinionWidth, height: gameValues.evilMinionHeight, srcs: gameValues.evilMinionSrcs });
 
     if (this.difficulty === "medium-start" || this.difficulty === "hard-start") {
-      this.flyingObstacle = new Obstacle( { position: [2000, 60], resetPosition: 2000, velocity: gameValues.airplaneVelocity, width: 50, height: 40, srcs: ['./assets/airplane.png']} );
+      this.flyingObstacle = new Obstacle( { position: gameValues.flyingObstaclePosition, resetPosition: gameValues.flyingObstacleResetPosition, velocity: gameValues.airplaneVelocity, width: 50, height: 40, srcs: ['./assets/airplane.png']} );
     }
   }
 
