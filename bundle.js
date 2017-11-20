@@ -410,12 +410,19 @@ class Game {
 
   setDifficulty() {
     const defaultValues = {
+      minionPosition: [10, 250],
       skyscraperVelocity: 4,
       airplaneVelocity: 4,
       obstacleResetPosition: 1100,
       evilMinionHeight: 50,
       evilMinionWidth: 50,
       evilMinionVelocity: 4,
+      evilMinionOnePosition: [900, 250],
+      evilMinionTwoPosition: [1200, 250],
+      evilMinionThreePosition: [1500, 250],
+      evilMinionFourPosition: [1800, 250],
+      skyscraperOnePosition: [725, 200],
+      skyscraperTwoPosition: [1200, 200],
       skyscraperImage: './assets/skyscraper.png',
       skyscraperWidth: 80,
       skyscraper2Image: './assets/fat-tall-sky.png',
@@ -446,25 +453,21 @@ class Game {
   }
 
   generatePieces() {
-    const defaultValues = {
-      skyscraperVelocity: 4,
-      airplaneVelocity: 2,
-    }
 
     let gameValues = this.setDifficulty();
 
-    this.minion = new Minion({ position: [10, 250] });
+    this.minion = new Minion({ position: gameValues.minionPosition });
 
-    this.obstacle = new Obstacle({position: [725, 200], resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, srcs: [gameValues.skyscraperImage] });
-    this.obstacle2 = new Obstacle({position: [1200, 200], resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, srcs: [gameValues.skyscraper2Image] });
+    this.obstacle = new Obstacle({position: gameValues.skyscraperOnePosition, resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, srcs: [gameValues.skyscraperImage] });
+    this.obstacle2 = new Obstacle({position: gameValues.skyscraperTwoPosition, resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, srcs: [gameValues.skyscraper2Image] });
 
-    this.evilMinion = new Obstacle({position: [900, 250], resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.evilMinionVelocity, width: gameValues.evilMinionWidth, height: gameValues.evilMinionHeight, srcs: gameValues.evilMinionSrcs });
+    this.evilMinion = new Obstacle({position: gameValues.evilMinionOnePosition, resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.evilMinionVelocity, width: gameValues.evilMinionWidth, height: gameValues.evilMinionHeight, srcs: gameValues.evilMinionSrcs });
 
-    this.evilMinion2 = new Obstacle({position: [1200, 250], resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.evilMinionVelocity, width: gameValues.evilMinionWidth, height: gameValues.evilMinionHeight, srcs: gameValues.evilMinionSrcs });
+    this.evilMinion2 = new Obstacle({position: gameValues.evilMinionTwoPosition, resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.evilMinionVelocity, width: gameValues.evilMinionWidth, height: gameValues.evilMinionHeight, srcs: gameValues.evilMinionSrcs });
 
-    this.evilMinion3 = new Obstacle({position: [1500, 250], resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.evilMinionVelocity, width: gameValues.evilMinionWidth, height: gameValues.evilMinionHeight, srcs: gameValues.evilMinionSrcs });
+    this.evilMinion3 = new Obstacle({position: gameValues.evilMinionThreePosition, resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.evilMinionVelocity, width: gameValues.evilMinionWidth, height: gameValues.evilMinionHeight, srcs: gameValues.evilMinionSrcs });
 
-    this.evilMinion4 = new Obstacle({position: [1800, 250], resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.evilMinionVelocity, width: gameValues.evilMinionWidth, height: gameValues.evilMinionHeight, srcs: gameValues.evilMinionSrcs });
+    this.evilMinion4 = new Obstacle({position: gameValues.evilMinionFourPosition, resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.evilMinionVelocity, width: gameValues.evilMinionWidth, height: gameValues.evilMinionHeight, srcs: gameValues.evilMinionSrcs });
 
     if (this.difficulty === "medium-start" || this.difficulty === "hard-start") {
       this.flyingObstacle = new Obstacle( { position: [2000, 60], resetPosition: 2000, velocity: gameValues.airplaneVelocity, width: 50, height: 40, srcs: ['./assets/airplane.png']} );
