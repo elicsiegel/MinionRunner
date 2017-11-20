@@ -425,6 +425,7 @@ class Game {
       skyscraperTwoPosition: [1200, 200],
       skyscraperImage: './assets/skyscraper.png',
       skyscraperWidth: 80,
+      skyscraperHeight: 100,
       skyscraper2Image: './assets/fat-tall-sky.png',
       evilMinionSrcs: ['./assets/evil_minion1.png', './assets/evil_minion2.png', './assets/evil_minion3.png', './assets/evil_minion4.png', './assets/evil_minion5.png', './assets/evil_minion6.png']
     }
@@ -458,8 +459,8 @@ class Game {
 
     this.minion = new Minion({ position: gameValues.minionPosition });
 
-    this.obstacle = new Obstacle({position: gameValues.skyscraperOnePosition, resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, srcs: [gameValues.skyscraperImage] });
-    this.obstacle2 = new Obstacle({position: gameValues.skyscraperTwoPosition, resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: 100, srcs: [gameValues.skyscraper2Image] });
+    this.obstacle = new Obstacle({position: gameValues.skyscraperOnePosition, resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: gameValues.skyscraperHeight, srcs: [gameValues.skyscraperImage] });
+    this.obstacle2 = new Obstacle({position: gameValues.skyscraperTwoPosition, resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.skyscraperVelocity, width: gameValues.skyscraperWidth, height: gameValues.skyscraperHeight, srcs: [gameValues.skyscraper2Image] });
 
     this.evilMinion = new Obstacle({position: gameValues.evilMinionOnePosition, resetPosition: gameValues.obstacleResetPosition, velocity: gameValues.evilMinionVelocity, width: gameValues.evilMinionWidth, height: gameValues.evilMinionHeight, srcs: gameValues.evilMinionSrcs });
 
