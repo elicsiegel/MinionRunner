@@ -148,6 +148,7 @@ const Minion = __webpack_require__(3);
 const Obstacle = __webpack_require__(4);
 const Menu = __webpack_require__(5);
 const Database = __webpack_require__(0);
+const Constants = __webpack_require__(6);
 
 class Game {
 
@@ -222,7 +223,7 @@ class Game {
   }
 
   activateJump() {
-    if (!this.muted) {
+    if (!this.muted && !this.minion.jumping && !this.gameOver) {
       this.jumpSound.play();
     }
 
@@ -486,6 +487,7 @@ class Game {
   }
 
   start(difficulty) {
+    
     this.canvas.classList.remove('paused');
     this.canvas.focus();
     this.difficulty = difficulty;
@@ -719,6 +721,27 @@ class Menu {
 }
 
 module.exports = Menu;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+const Constants = {
+
+  minionPosition: [10, 250],
+  evilMinionOnePosition: [900, 250],
+  evilMinionTwoPosition: [1200, 250],
+  evilMinionThreePosition: [1500, 250],
+  evilMinionFourPosition: [1800, 250],
+  skyscraperOnePosition: [725, 200],
+  skyscraperTwoPosition: [1200, 200],
+  flyingObstaclePosition: [2000, 60],
+
+}
+
+
+module.exports = Constants;
+
 
 /***/ })
 /******/ ]);
