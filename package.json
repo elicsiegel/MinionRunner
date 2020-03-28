@@ -1,0 +1,32 @@
+{
+  "name": "minion-runner",
+  "version": "1.0.0",
+  "description": "A fun infinite run jumping game",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "lint": "eslint ./lib",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elicsiegel/MinionRunner.git"
+  },
+  "author": "Eli Siegel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elicsiegel/MinionRunner/issues"
+  },
+  "homepage": "https://github.com/elicsiegel/MinionRunner#readme",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^2.0.2",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  }
+}
