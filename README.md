@@ -43,15 +43,12 @@ All 2D rendering is done using HTML 5 Canvas. To detect collisions between the M
 
 ```javascript
 isCollidedWith(otherObject) {
-    if (this.position[0] < (otherObject.position[0] + otherObject.width) && 
-      (this.position[0] + this.width) > otherObject.position[0] &&
-      this.position[1] < (otherObject.position[1] + otherObject.height) &&
-      (this.position[1] + this.height) > otherObject.position[1]
-      ) { 
-      return true;
-    } else {
-      return false; 
-    }
+    return (
+            this.position[0] < otherObject.position[0] + otherObject.width &&
+            this.position[0] + this.width > otherObject.position[0] &&
+            this.position[1] < otherObject.position[1] + otherObject.height &&
+            this.position[1] + this.height > otherObject.position[1]
+        );
   }
 ```
 
@@ -70,3 +67,7 @@ setEventListeners() {
     this.canvas.addEventListener('click', (e) => this.mute(e));
   }
 ```
+
+#### Linting
+
+Linting is done using Eslint and Prettier for more easily readable and bug free code 
