@@ -64,7 +64,7 @@ I implemented an event listener using the native JavaScript API to toggle muting
 
 ```javascript
 setEventListeners() {
-    this.canvas.addEventListener('click', (e) => this.mute(e));
+    this.canvas.addEventListener('click', () => this.mute());
   }
 ```
 
